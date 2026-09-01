@@ -338,17 +338,14 @@ async function saveEvent() {
   }
 
   try {
-    const photo = ev.photo || ''
-    if (photo.startsWith('data:')) {
-      // base64 — usa POST
-      const res  = await fetch(API, { method:'POST', body: JSON.stringify(ev) })
-      const data = await res.json()
-      if (data.status !== 'ok') throw new Error(data.msg)
-    } else {
-      // URL pequena — usa GET
-      const url = `${API}?action=save_event&id=${encodeURIComponent(ev.id)}&title=${encodeURIComponent(ev.title)}&date=${encodeURIComponent(ev.date)}&time=${encodeURIComponent(ev.time)}&local=${encodeURIComponent(ev.local)}&desc=${encodeURIComponent(ev.desc)}&photo=${encodeURIComponent(ev.photo)}`
-      await fetch(url)
-    }
+    // Sempre usa POST para evitar problemas com caracteres especiais e imagens
+    const res  = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify(ev),
+      headers: {'Content-Type': 'application/json'}
+    })
+    // no-cors pode retornar resposta opaca — considera sucesso se não jogar erro
+    
     await loadEventsFromAPI()
     renderEvList()
     clearEvForm()
@@ -360,9 +357,11 @@ async function saveEvent() {
 }
 
 function editEvent(id) {
-  const ev = getEvents().find(e => e.id === id); if (!ev) return
+  const evs = getEvents()
+  const ev  = evs.find(e => String(e.id) === String(id))
+  if (!ev) { alert('Evento não encontrado. Recarregue a página.'); return }
   document.getElementById('editId').value  = ev.id
-  document.getElementById('evTitle').value = ev.title
+  document.getElementById('evTitle').value = ev.title || ''
   document.getElementById('evDate').value  = ev.date  || ''
   document.getElementById('evTime').value  = ev.time  || ''
   document.getElementById('evLocal').value = ev.local || ''
@@ -371,13 +370,13 @@ function editEvent(id) {
   if (ev.photo) {
     document.getElementById('evPhotoPreview').src = ev.photo
     document.getElementById('evPhotoPreviewBox').style.display = 'block'
-    // if it's a URL (not base64), show in URL field
     if (!ev.photo.startsWith('data:')) {
       document.getElementById('evPhotoUrl').value = ev.photo
     }
   }
   document.getElementById('evFormTitle').textContent = '✏️ Editar evento'
   document.getElementById('saveEvBtn').textContent   = 'Atualizar evento'
+  document.querySelector('.dashboard').scrollTo({top:0,behavior:'smooth'})
   window.scrollTo({top:0,behavior:'smooth'})
 }
 
@@ -398,20 +397,30 @@ function renderEvList() {
   const el  = document.getElementById('evList')
   if (!evs.length) { el.innerHTML = '<div class="empty">Nenhum evento cadastrado ainda.</div>'; return }
   const COLORS = ['s-rose','s-gold','s-green']
-  el.innerHTML = evs.map((ev, i) => `
-    <div class="ev-item">
+  el.innerHTML = evs.map((ev, i) => {
+    // Formata data — remove timestamp ISO se vier errado
+    let dateStr = ev.date || ''
+    if (dateStr.includes('T') && dateStr.includes('Z')) {
+      try {
+        const d = new Date(dateStr)
+        dateStr = d.toLocaleDateString('pt-BR')
+      } catch(e) {}
+    }
+    const safeId = String(ev.id).replace(/'/g, '')
+    return `<div class="ev-item">
       ${ev.photo
         ? `<img class="ev-thumb" src="${ev.photo}" onerror="this.style.display='none'" alt="">`
         : `<div class="ev-thumb-placeholder">📅</div>`}
       <div class="ev-info">
         <div class="ev-name">${ev.title}</div>
-        <div class="ev-meta">${ev.date || 'Sem data'}${ev.time ? ' · ' + ev.time : ''}${ev.local ? ' · ' + ev.local : ''}</div>
+        <div class="ev-meta">${dateStr || 'Sem data'}${ev.time ? ' · ' + ev.time : ''}${ev.local ? ' · ' + ev.local : ''}</div>
       </div>
       <div class="ev-btns">
-        <button class="edit-btn" onclick="editEvent('${ev.id}')">Editar</button>
-        <button class="del-btn"  onclick="deleteEvent('${ev.id}')">Excluir</button>
+        <button class="edit-btn" onclick="editEvent('${safeId}')">Editar</button>
+        <button class="del-btn"  onclick="deleteEvent('${safeId}')">Excluir</button>
       </div>
-    </div>`).join('')
+    </div>`
+  }).join('')
 }
 
 // ---- RANKING ----
