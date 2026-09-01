@@ -236,7 +236,7 @@ function doLogin() {
   if (u === ADMIN_USER && p === ADMIN_PASS) {
     document.getElementById('loginWrap').style.display  = 'none'
     document.getElementById('dashboard').style.display  = 'block'
-    renderEvList()
+    loadEventsFromAPI().then(() => renderEvList())
     loadRanking()
   } else {
     document.getElementById('loginErr').style.display = 'block'
@@ -261,10 +261,20 @@ function showTab(id, btn) {
 }
 
 // ---- EVENTOS ----
+async function loadEventsFromAPI() {
+  try {
+    const res  = await fetch(`${API}?action=get_events`)
+    const data = await res.json()
+    const evs  = data.events || []
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(evs))
+    return evs
+  } catch(e) {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+  }
+}
 function getEvents() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]') } catch(e) { return [] }
 }
-function setEvents(evs) { localStorage.setItem(STORAGE_KEY, JSON.stringify(evs)) }
 
 function handlePhotoUpload(input) {
   if (!input.files || !input.files[0]) return
@@ -308,32 +318,45 @@ function clearEvForm() {
   showMsg('evMsg','','')
 }
 
-function saveEvent() {
+async function saveEvent() {
   const title = document.getElementById('evTitle').value.trim()
   const desc  = document.getElementById('evDesc').value.trim()
   if (!title) { showMsg('evMsg','Título obrigatório.','err'); return }
   if (!desc)  { showMsg('evMsg','Descrição obrigatória.','err'); return }
 
-  const editId = document.getElementById('editId').value
-  const evs = getEvents()
+  const btn = document.getElementById('saveEvBtn')
+  btn.disabled = true; btn.textContent = 'Salvando…'
+
   const ev = {
-    id:    editId || Date.now().toString(),
+    tipo: 'evento',
+    id:    document.getElementById('editId').value || Date.now().toString(),
     title, desc,
     date:  document.getElementById('evDate').value.trim(),
     time:  document.getElementById('evTime').value.trim(),
     local: document.getElementById('evLocal').value.trim(),
     photo: document.getElementById('evPhoto').value.trim(),
   }
-  if (editId) {
-    const idx = evs.findIndex(e => e.id === editId)
-    if (idx >= 0) evs[idx] = ev; else evs.push(ev)
-  } else {
-    evs.push(ev)
+
+  try {
+    const photo = ev.photo || ''
+    if (photo.startsWith('data:')) {
+      // base64 — usa POST
+      const res  = await fetch(API, { method:'POST', body: JSON.stringify(ev) })
+      const data = await res.json()
+      if (data.status !== 'ok') throw new Error(data.msg)
+    } else {
+      // URL pequena — usa GET
+      const url = `${API}?action=save_event&id=${encodeURIComponent(ev.id)}&title=${encodeURIComponent(ev.title)}&date=${encodeURIComponent(ev.date)}&time=${encodeURIComponent(ev.time)}&local=${encodeURIComponent(ev.local)}&desc=${encodeURIComponent(ev.desc)}&photo=${encodeURIComponent(ev.photo)}`
+      await fetch(url)
+    }
+    await loadEventsFromAPI()
+    renderEvList()
+    clearEvForm()
+    showMsg('evMsg','✓ Evento salvo e publicado!','ok')
+  } catch(err) {
+    showMsg('evMsg','Erro ao salvar. Tente novamente.','err')
   }
-  setEvents(evs)
-  renderEvList()
-  clearEvForm()
-  showMsg('evMsg','✓ Evento salvo com sucesso!','ok')
+  btn.disabled = false; btn.textContent = document.getElementById('editId').value ? 'Atualizar evento' : 'Salvar evento'
 }
 
 function editEvent(id) {
@@ -358,11 +381,16 @@ function editEvent(id) {
   window.scrollTo({top:0,behavior:'smooth'})
 }
 
-function deleteEvent(id) {
+async function deleteEvent(id) {
   if (!confirm('Excluir este evento?')) return
-  setEvents(getEvents().filter(e => e.id !== id))
-  renderEvList()
-  showMsg('evMsg','Evento excluído.','ok')
+  try {
+    await fetch(`${API}?action=delete_event&id=${encodeURIComponent(id)}`)
+    await loadEventsFromAPI()
+    renderEvList()
+    showMsg('evMsg','Evento excluído.','ok')
+  } catch(e) {
+    showMsg('evMsg','Erro ao excluir.','err')
+  }
 }
 
 function renderEvList() {
