@@ -169,10 +169,25 @@ textarea{resize:none}
           <textarea id="evDesc" rows="3" placeholder="Descreva o evento"></textarea>
         </div>
         <div>
-          <div class="field-label">URL da foto</div>
-          <input type="text" id="evPhoto" placeholder="Cole o link da imagem" oninput="previewEvPhoto()">
-          <img id="evPhotoPreview" class="photo-preview-box">
-          <div class="tip">💡 Dica: suba a foto no Google Fotos, clique em "Compartilhar" → "Criar link" e cole aqui. Ou use qualquer link público de imagem.</div>
+          <div class="field-label">Foto do evento</div>
+          <!-- Upload do computador -->
+          <input type="file" id="evPhotoFile" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+          <button type="button" onclick="document.getElementById('evPhotoFile').click()" style="width:100%;padding:11px;border:1.5px dashed var(--lilac);border-radius:10px;background:var(--rose-lt);font-family:'DM Sans',sans-serif;font-size:13px;color:#7a3328;cursor:pointer;text-align:center;margin-bottom:6px">
+            📁 Escolher foto do computador
+          </button>
+          <!-- OU URL -->
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <div style="flex:1;height:0.5px;background:var(--line)"></div>
+            <span style="font-size:11px;color:var(--ink-soft)">ou cole um link</span>
+            <div style="flex:1;height:0.5px;background:var(--line)"></div>
+          </div>
+          <input type="text" id="evPhotoUrl" placeholder="https://... (link da imagem)" oninput="previewEvPhotoUrl()">
+          <input type="hidden" id="evPhoto">
+          <!-- Preview -->
+          <div id="evPhotoPreviewBox" style="display:none;margin-top:8px;position:relative">
+            <img id="evPhotoPreview" style="width:100%;max-height:180px;object-fit:cover;border-radius:10px;border:0.5px solid var(--line);display:block">
+            <button type="button" onclick="clearPhoto()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.5);border:none;border-radius:50%;width:24px;height:24px;color:#fff;font-size:14px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center">✕</button>
+          </div>
         </div>
       </div>
       <div style="display:flex;gap:8px">
@@ -251,18 +266,43 @@ function getEvents() {
 }
 function setEvents(evs) { localStorage.setItem(STORAGE_KEY, JSON.stringify(evs)) }
 
-function previewEvPhoto() {
-  const url = document.getElementById('evPhoto').value.trim()
-  const img = document.getElementById('evPhotoPreview')
-  if (url) { img.src = url; img.style.display = 'block' }
-  else img.style.display = 'none'
+function handlePhotoUpload(input) {
+  if (!input.files || !input.files[0]) return
+  const reader = new FileReader()
+  reader.onload = e => {
+    document.getElementById('evPhoto').value = e.target.result
+    document.getElementById('evPhotoUrl').value = ''
+    document.getElementById('evPhotoPreview').src = e.target.result
+    document.getElementById('evPhotoPreviewBox').style.display = 'block'
+  }
+  reader.readAsDataURL(input.files[0])
+}
+
+function previewEvPhotoUrl() {
+  const url = document.getElementById('evPhotoUrl').value.trim()
+  if (url) {
+    document.getElementById('evPhoto').value = url
+    document.getElementById('evPhotoPreview').src = url
+    document.getElementById('evPhotoPreviewBox').style.display = 'block'
+  } else {
+    document.getElementById('evPhoto').value = ''
+    document.getElementById('evPhotoPreviewBox').style.display = 'none'
+  }
+}
+
+function clearPhoto() {
+  document.getElementById('evPhoto').value = ''
+  document.getElementById('evPhotoUrl').value = ''
+  document.getElementById('evPhotoFile').value = ''
+  document.getElementById('evPhotoPreviewBox').style.display = 'none'
 }
 
 function clearEvForm() {
-  ['evTitle','evDate','evTime','evLocal','evDesc','evPhoto','editId'].forEach(id => {
+  ['evTitle','evDate','evTime','evLocal','evDesc','evPhoto','evPhotoUrl','editId'].forEach(id => {
     const el = document.getElementById(id); if(el) el.value = ''
   })
-  document.getElementById('evPhotoPreview').style.display = 'none'
+  document.getElementById('evPhotoFile').value = ''
+  document.getElementById('evPhotoPreviewBox').style.display = 'none'
   document.getElementById('evFormTitle').textContent = '➕ Novo evento'
   document.getElementById('saveEvBtn').textContent   = 'Salvar evento'
   showMsg('evMsg','','')
@@ -307,7 +347,11 @@ function editEvent(id) {
   document.getElementById('evPhoto').value = ev.photo || ''
   if (ev.photo) {
     document.getElementById('evPhotoPreview').src = ev.photo
-    document.getElementById('evPhotoPreview').style.display = 'block'
+    document.getElementById('evPhotoPreviewBox').style.display = 'block'
+    // if it's a URL (not base64), show in URL field
+    if (!ev.photo.startsWith('data:')) {
+      document.getElementById('evPhotoUrl').value = ev.photo
+    }
   }
   document.getElementById('evFormTitle').textContent = '✏️ Editar evento'
   document.getElementById('saveEvBtn').textContent   = 'Atualizar evento'
