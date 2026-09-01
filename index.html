@@ -532,9 +532,25 @@ async function loadRanking() {
 // ---- EVENTOS ----
 function getEvents(){ try{return JSON.parse(localStorage.getItem('pw3_events')||'[]')}catch(e){return []} }
 
-function renderEvents() {
-  const evs = getEvents()
-  const el  = document.getElementById('eventsList')
+function getEventsLocal(){ try{return JSON.parse(localStorage.getItem('pw3_events')||'[]')}catch(e){return []} }
+
+async function renderEvents() {
+  const el = document.getElementById('eventsList')
+  el.innerHTML = '<div class="loading">Carregando eventos…</div>'
+  try {
+    const res  = await fetch(`${API}?action=get_events`)
+    const data = await res.json()
+    const evs  = data.events || []
+    localStorage.setItem('pw3_events', JSON.stringify(evs))
+    renderEventsHtml(evs)
+  } catch(e) {
+    // fallback to local
+    renderEventsHtml(getEventsLocal())
+  }
+}
+
+function renderEventsHtml(evs) {
+  const el = document.getElementById('eventsList')
   if(!evs.length){el.innerHTML='<div class="no-events">Em breve novidades! 💜</div>';return}
   el.innerHTML = evs.map((ev,i)=>`
     <div class="event-card">
@@ -626,7 +642,7 @@ function toggleLike(id, btn) {
 
 // ---- INIT ----
 if (userName) startChecklist()
-else renderEvents()
+renderEvents()
 </script>
 </body>
 </html>
