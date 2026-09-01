@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Power Wellness</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --rose:#cf98dd;--rose-lt:#fcedf4;--rose-mid:#f1cee0;
+  --lilac:#c5b3d8;--cream:#fdf9f6;--ink:#2a1f2d;
+  --ink-mid:#5a4a5e;--ink-soft:#9a8a9e;--line:rgba(197,179,216,0.25);
+  --green:#3a9e72;--green-lt:#e8f4ef;--gold:#b8922a;--gold-lt:#faf3e0;
+  --red:#c0647a;--red-lt:#fdf0f3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+.login-box{background:#fff;border:0.5px solid var(--line);border-radius:20px;padding:2.5rem;width:100%;max-width:360px;text-align:center}
+.login-logo{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:var(--ink);margin-bottom:4px}
+.login-logo span{color:var(--rose);font-style:italic}
+.login-sub{font-size:12px;color:var(--ink-soft);margin-bottom:2rem}
+.login-input{width:100%;padding:12px 14px;border:0.5px solid var(--lilac);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:#fff;outline:none;margin-bottom:10px;transition:border-color .2s}
+.login-input:focus{border-color:var(--rose)}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:opacity .2s}
+.btn-primary{background:var(--rose);color:#fff}.btn-primary:hover{opacity:.88}
+.btn-danger{background:var(--red-lt);color:var(--red);border:0.5px solid var(--red)}
+.btn-outline{background:none;color:var(--ink-soft);border:0.5px solid var(--line)}
+.btn-sm{padding:8px 14px;font-size:12px;border-radius:8px;width:auto}
+.login-err{font-size:12px;color:var(--red);margin-top:8px;display:none}
+
+/* DASHBOARD */
+.dashboard{display:none;max-width:720px;margin:0 auto;padding:1.5rem}
+.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:0.5px solid var(--line)}
+.dash-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500}
+.dash-logo span{color:var(--rose);font-style:italic}
+.dash-right{display:flex;align-items:center;gap:10px}
+.logout-btn{font-size:12px;color:var(--ink-soft);background:none;border:0.5px solid var(--line);border-radius:20px;padding:5px 12px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.view-site-btn{font-size:12px;color:var(--rose);background:var(--rose-lt);border:0.5px solid var(--lilac);border-radius:20px;padding:5px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none}
+
+/* TABS */
+.tabs{display:flex;gap:0;border:0.5px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
+.tab{flex:1;padding:10px 6px;background:none;border:none;cursor:pointer;font-size:12px;font-weight:500;color:var(--ink-soft);border-right:0.5px solid var(--line);font-family:'DM Sans',sans-serif;transition:all .2s;text-align:center}
+.tab:last-child{border-right:none}
+.tab.active{background:var(--rose-lt);color:var(--ink)}
+.view{display:none}.view.active{display:block}
+
+/* CARDS */
+.card{background:#fff;border:0.5px solid var(--line);border-radius:12px;padding:1.25rem;margin-bottom:12px}
+.card-title{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:10px}
+.sec-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-soft);margin:1.25rem 0 8px}
+
+/* FORM */
+.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.field-label{font-size:11px;font-weight:500;color:var(--ink-soft);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
+input[type=text],input[type=password],textarea,select{width:100%;padding:10px 12px;border:0.5px solid var(--lilac);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:#fff;outline:none;transition:border-color .2s}
+input:focus,textarea:focus{border-color:var(--rose)}
+input::placeholder,textarea::placeholder{color:var(--ink-soft)}
+textarea{resize:none}
+
+/* EVENT ITEMS */
+.ev-list{display:flex;flex-direction:column;gap:8px}
+.ev-item{background:var(--cream);border:0.5px solid var(--line);border-radius:10px;padding:10px 14px;display:flex;align-items:flex-start;gap:12px}
+.ev-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;border:0.5px solid var(--line)}
+.ev-thumb-placeholder{width:48px;height:48px;border-radius:8px;background:var(--rose-mid);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ev-info{flex:1}
+.ev-name{font-size:13px;font-weight:500;color:var(--ink)}
+.ev-meta{font-size:11px;color:var(--ink-soft);margin-top:2px}
+.ev-btns{display:flex;gap:6px;flex-shrink:0}
+.edit-btn{padding:5px 10px;font-size:11px;border-radius:6px;border:0.5px solid var(--lilac);background:var(--rose-lt);color:#7a3328;cursor:pointer;font-family:'DM Sans',sans-serif}
+.del-btn{padding:5px 10px;font-size:11px;border-radius:6px;border:0.5px solid #f0c0c8;background:var(--red-lt);color:var(--red);cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* PHOTO PREVIEW */
+.photo-preview-box{width:100%;max-height:160px;object-fit:cover;border-radius:8px;border:0.5px solid var(--line);margin-top:6px;display:none}
+
+/* RANKING TABLE */
+.rank-table{width:100%;border-collapse:separate;border-spacing:0 5px}
+.rank-table th{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);padding:0 12px 4px;text-align:left}
+.rank-table td{padding:10px 12px;background:#fff;font-size:13px;color:var(--ink)}
+.rank-table td:first-child{border-radius:8px 0 0 8px;border:0.5px solid var(--line);border-right:none}
+.rank-table td:not(:first-child):not(:last-child){border-top:0.5px solid var(--line);border-bottom:0.5px solid var(--line);border-left:none;border-right:none}
+.rank-table td:last-child{border-radius:0 8px 8px 0;border:0.5px solid var(--line);border-left:none}
+.pts-pill{display:inline-block;padding:2px 8px;border-radius:20px;background:var(--rose-lt);color:var(--rose);font-weight:500;font-size:11px}
+.medal{font-size:16px}
+
+/* PHOTOS PANEL */
+.photos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.photo-admin-card{background:#fff;border:0.5px solid var(--line);border-radius:10px;overflow:hidden}
+.photo-admin-card img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.photo-admin-body{padding:7px 9px}
+.photo-admin-name{font-size:11px;font-weight:500;color:var(--ink)}
+.photo-admin-day{font-size:10px;color:var(--ink-soft)}
+.photo-admin-likes{font-size:10px;color:var(--ink-soft);margin-top:3px}
+.del-photo-btn{font-size:10px;padding:3px 7px;border-radius:5px;border:0.5px solid #f0c0c8;background:var(--red-lt);color:var(--red);cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.25rem}
+.stat-card{background:#fff;border:0.5px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+.stat-val{font-size:26px;font-weight:500;color:var(--ink)}
+.stat-label{font-size:10px;color:var(--ink-soft);margin-top:3px;line-height:1.3}
+
+.msg{font-size:12px;text-align:center;padding:6px;display:none;border-radius:6px;margin-top:8px}
+.msg.ok{color:var(--green);background:var(--green-lt)}
+.msg.err{color:var(--red);background:var(--red-lt)}
+.loading{text-align:center;padding:2rem;font-size:13px;color:var(--ink-soft)}
+.empty{text-align:center;padding:2rem;font-size:13px;color:var(--ink-soft);font-style:italic}
+.tip{background:var(--gold-lt);border:0.5px solid #d4b87a;border-radius:8px;padding:8px 12px;font-size:11px;color:#6b5010;line-height:1.5;margin-top:8px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">Power <span>Wellness.</span></div>
+    <div class="login-sub">Painel Administrativo · 3ª Edição</div>
+    <input type="text"     class="login-input" id="loginUser" placeholder="Usuário" autocomplete="off">
+    <input type="password" class="login-input" id="loginPass" placeholder="Senha" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn btn-primary" onclick="doLogin()">Entrar</button>
+    <div class="login-err" id="loginErr">Usuário ou senha incorretos</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+  <div class="dash-header">
+    <div class="dash-logo">Power <span>Wellness.</span> <span style="font-family:'DM Sans';font-size:12px;color:var(--ink-soft);font-weight:400">Admin</span></div>
+    <div class="dash-right">
+      <a href="index.html" target="_blank" class="view-site-btn">Ver site ↗</a>
+      <button class="logout-btn" onclick="logout()">Sair</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('eventos',this)">Eventos</button>
+    <button class="tab" onclick="showTab('ranking',this)">Ranking</button>
+    <button class="tab" onclick="showTab('fotos',this)">Fotos</button>
+  </div>
+
+  <!-- EVENTOS -->
+  <div class="view active" id="v-eventos">
+    <div class="card">
+      <div class="card-title" id="evFormTitle">➕ Novo evento</div>
+      <input type="hidden" id="editId">
+      <div class="form-group">
+        <div>
+          <div class="field-label">Título *</div>
+          <input type="text" id="evTitle" placeholder="Nome do evento">
+        </div>
+        <div class="form-row">
+          <div>
+            <div class="field-label">Data</div>
+            <input type="text" id="evDate" placeholder="ex: 25 de julho">
+          </div>
+          <div>
+            <div class="field-label">Horário</div>
+            <input type="text" id="evTime" placeholder="ex: 10h às 16h">
+          </div>
+        </div>
+        <div>
+          <div class="field-label">Local / endereço</div>
+          <input type="text" id="evLocal" placeholder="Espaço Águas Claras — Macacos">
+        </div>
+        <div>
+          <div class="field-label">Descrição *</div>
+          <textarea id="evDesc" rows="3" placeholder="Descreva o evento"></textarea>
+        </div>
+        <div>
+          <div class="field-label">URL da foto</div>
+          <input type="text" id="evPhoto" placeholder="Cole o link da imagem" oninput="previewEvPhoto()">
+          <img id="evPhotoPreview" class="photo-preview-box">
+          <div class="tip">💡 Dica: suba a foto no Google Fotos, clique em "Compartilhar" → "Criar link" e cole aqui. Ou use qualquer link público de imagem.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-outline btn-sm" onclick="clearEvForm()">Limpar</button>
+        <button class="btn btn-primary btn-sm" onclick="saveEvent()" id="saveEvBtn" style="flex:1">Salvar evento</button>
+      </div>
+      <div class="msg" id="evMsg"></div>
+    </div>
+
+    <div class="sec-label">Eventos cadastrados</div>
+    <div class="ev-list" id="evList"><div class="loading">Carregando…</div></div>
+  </div>
+
+  <!-- RANKING -->
+  <div class="view" id="v-ranking">
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card"><div class="stat-val">—</div><div class="stat-label">Participantes</div></div>
+      <div class="stat-card"><div class="stat-val">—</div><div class="stat-label">Dias completos (top 1)</div></div>
+      <div class="stat-card"><div class="stat-val">—</div><div class="stat-label">Pontuação máxima</div></div>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="loadRanking()" style="margin-bottom:12px">↺ Atualizar ranking</button>
+    <table class="rank-table">
+      <thead><tr><th>#</th><th>Nome</th><th>Pontos</th><th>Dias completos</th><th>Sequência</th></tr></thead>
+      <tbody id="rankBody"><tr><td colspan="5" class="loading">Carregando…</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- FOTOS -->
+  <div class="view" id="v-fotos">
+    <button class="btn btn-outline btn-sm" onclick="loadAdminPhotos()" style="margin-bottom:12px">↺ Atualizar fotos</button>
+    <div id="adminPhotosGrid" class="loading">Carregando…</div>
+  </div>
+</div>
+
+<script>
+const ADMIN_USER = 'grazzy'
+const ADMIN_PASS = 'power2025'
+const API = 'https://script.google.com/macros/s/AKfycbz6MwnFIJZ2ainEnnzb_QjwmVLaVocY97YPVKQY7qq1hINQIY16yjAGPBV0mpE-QIiBEw/exec'
+const STORAGE_KEY = 'pw3_events'
+const PHOTOS_KEY  = 'pw3_photos'
+
+// ---- AUTH ----
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim()
+  const p = document.getElementById('loginPass').value
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('loginWrap').style.display  = 'none'
+    document.getElementById('dashboard').style.display  = 'block'
+    renderEvList()
+    loadRanking()
+  } else {
+    document.getElementById('loginErr').style.display = 'block'
+  }
+}
+
+function logout() {
+  document.getElementById('loginWrap').style.display  = 'flex'
+  document.getElementById('dashboard').style.display  = 'none'
+  document.getElementById('loginUser').value = ''
+  document.getElementById('loginPass').value = ''
+}
+
+// ---- TABS ----
+function showTab(id, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'))
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'))
+  document.getElementById('v-' + id).classList.add('active')
+  btn.classList.add('active')
+  if (id === 'ranking') loadRanking()
+  if (id === 'fotos')   loadAdminPhotos()
+}
+
+// ---- EVENTOS ----
+function getEvents() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]') } catch(e) { return [] }
+}
+function setEvents(evs) { localStorage.setItem(STORAGE_KEY, JSON.stringify(evs)) }
+
+function previewEvPhoto() {
+  const url = document.getElementById('evPhoto').value.trim()
+  const img = document.getElementById('evPhotoPreview')
+  if (url) { img.src = url; img.style.display = 'block' }
+  else img.style.display = 'none'
+}
+
+function clearEvForm() {
+  ['evTitle','evDate','evTime','evLocal','evDesc','evPhoto','editId'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = ''
+  })
+  document.getElementById('evPhotoPreview').style.display = 'none'
+  document.getElementById('evFormTitle').textContent = '➕ Novo evento'
+  document.getElementById('saveEvBtn').textContent   = 'Salvar evento'
+  showMsg('evMsg','','')
+}
+
+function saveEvent() {
+  const title = document.getElementById('evTitle').value.trim()
+  const desc  = document.getElementById('evDesc').value.trim()
+  if (!title) { showMsg('evMsg','Título obrigatório.','err'); return }
+  if (!desc)  { showMsg('evMsg','Descrição obrigatória.','err'); return }
+
+  const editId = document.getElementById('editId').value
+  const evs = getEvents()
+  const ev = {
+    id:    editId || Date.now().toString(),
+    title, desc,
+    date:  document.getElementById('evDate').value.trim(),
+    time:  document.getElementById('evTime').value.trim(),
+    local: document.getElementById('evLocal').value.trim(),
+    photo: document.getElementById('evPhoto').value.trim(),
+  }
+  if (editId) {
+    const idx = evs.findIndex(e => e.id === editId)
+    if (idx >= 0) evs[idx] = ev; else evs.push(ev)
+  } else {
+    evs.push(ev)
+  }
+  setEvents(evs)
+  renderEvList()
+  clearEvForm()
+  showMsg('evMsg','✓ Evento salvo com sucesso!','ok')
+}
+
+function editEvent(id) {
+  const ev = getEvents().find(e => e.id === id); if (!ev) return
+  document.getElementById('editId').value  = ev.id
+  document.getElementById('evTitle').value = ev.title
+  document.getElementById('evDate').value  = ev.date  || ''
+  document.getElementById('evTime').value  = ev.time  || ''
+  document.getElementById('evLocal').value = ev.local || ''
+  document.getElementById('evDesc').value  = ev.desc  || ''
+  document.getElementById('evPhoto').value = ev.photo || ''
+  if (ev.photo) {
+    document.getElementById('evPhotoPreview').src = ev.photo
+    document.getElementById('evPhotoPreview').style.display = 'block'
+  }
+  document.getElementById('evFormTitle').textContent = '✏️ Editar evento'
+  document.getElementById('saveEvBtn').textContent   = 'Atualizar evento'
+  window.scrollTo({top:0,behavior:'smooth'})
+}
+
+function deleteEvent(id) {
+  if (!confirm('Excluir este evento?')) return
+  setEvents(getEvents().filter(e => e.id !== id))
+  renderEvList()
+  showMsg('evMsg','Evento excluído.','ok')
+}
+
+function renderEvList() {
+  const evs = getEvents()
+  const el  = document.getElementById('evList')
+  if (!evs.length) { el.innerHTML = '<div class="empty">Nenhum evento cadastrado ainda.</div>'; return }
+  const COLORS = ['s-rose','s-gold','s-green']
+  el.innerHTML = evs.map((ev, i) => `
+    <div class="ev-item">
+      ${ev.photo
+        ? `<img class="ev-thumb" src="${ev.photo}" onerror="this.style.display='none'" alt="">`
+        : `<div class="ev-thumb-placeholder">📅</div>`}
+      <div class="ev-info">
+        <div class="ev-name">${ev.title}</div>
+        <div class="ev-meta">${ev.date || 'Sem data'}${ev.time ? ' · ' + ev.time : ''}${ev.local ? ' · ' + ev.local : ''}</div>
+      </div>
+      <div class="ev-btns">
+        <button class="edit-btn" onclick="editEvent('${ev.id}')">Editar</button>
+        <button class="del-btn"  onclick="deleteEvent('${ev.id}')">Excluir</button>
+      </div>
+    </div>`).join('')
+}
+
+// ---- RANKING ----
+async function loadRanking() {
+  const tbody = document.getElementById('rankBody')
+  const stats = document.getElementById('statsGrid')
+  tbody.innerHTML = '<tr><td colspan="5" class="loading">Carregando…</td></tr>'
+  try {
+    const res  = await fetch(`${API}?action=get3`)
+    const data = await res.json()
+    let entries = (data.ranking || []).sort((a,b) => {
+      if (b.pts !== a.pts) return b.pts - a.pts
+      if ((b.completeDays||0) !== (a.completeDays||0)) return (b.completeDays||0)-(a.completeDays||0)
+      return (b.bestStreak||0)-(a.bestStreak||0)
+    })
+    const medals = ['🥇','🥈','🥉']
+    if (!entries.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty">Nenhuma participante ainda.</td></tr>'; return }
+
+    stats.innerHTML = `
+      <div class="stat-card"><div class="stat-val">${entries.length}</div><div class="stat-label">Participantes</div></div>
+      <div class="stat-card"><div class="stat-val">${entries[0]?.completeDays||0}</div><div class="stat-label">Dias completos (1°)</div></div>
+      <div class="stat-card"><div class="stat-val">${entries[0]?.pts||0}</div><div class="stat-label">Maior pontuação</div></div>`
+
+    tbody.innerHTML = entries.map((e,i) => `<tr>
+      <td><span class="medal">${medals[i]||i+1}</span></td>
+      <td style="font-weight:500">${e.name}</td>
+      <td><span class="pts-pill">${e.pts||0} pts</span></td>
+      <td>${e.completeDays||0}/30</td>
+      <td>${e.bestStreak||0} dias</td>
+    </tr>`).join('')
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="5" class="empty">Erro ao carregar. Verifique a conexão.</td></tr>'
+  }
+}
+
+// ---- FOTOS ----
+function loadAdminPhotos() {
+  const el = document.getElementById('adminPhotosGrid')
+  const photos = JSON.parse(localStorage.getItem(PHOTOS_KEY) || '[]')
+  if (!photos.length) { el.innerHTML = '<div class="empty">Nenhuma foto compartilhada ainda.</div>'; el.className=''; return }
+  el.className = 'photos-grid'
+  el.innerHTML = photos.map(p => `
+    <div class="photo-admin-card">
+      <img src="${p.photo}" alt="${p.name}" loading="lazy" onerror="this.parentElement.style.display='none'">
+      <div class="photo-admin-body">
+        <div class="photo-admin-name">${p.name}</div>
+        <div class="photo-admin-day">${p.day}</div>
+        <div class="photo-admin-likes">❤️ ${p.likes||0} curtidas</div>
+        ${p.desc ? `<div style="font-size:10px;color:var(--ink-soft);margin-top:3px">${p.desc}</div>` : ''}
+        <button class="del-photo-btn" onclick="deletePhoto('${p.id}')">Remover</button>
+      </div>
+    </div>`).join('')
+}
+
+function deletePhoto(id) {
+  if (!confirm('Remover esta foto?')) return
+  const photos = JSON.parse(localStorage.getItem(PHOTOS_KEY) || '[]').filter(p => p.id !== id)
+  localStorage.setItem(PHOTOS_KEY, JSON.stringify(photos))
+  loadAdminPhotos()
+}
+
+// ---- UTILS ----
+function showMsg(id, text, type) {
+  const el = document.getElementById(id)
+  el.textContent = text
+  el.className   = 'msg ' + type
+  el.style.display = text ? 'block' : 'none'
+  if (text) setTimeout(() => el.style.display = 'none', 3500)
+}
+</script>
+</body>
+</html>
