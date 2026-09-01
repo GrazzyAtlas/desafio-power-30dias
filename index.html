@@ -14,24 +14,19 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
-
 .header{text-align:center;padding:1.75rem 1.5rem 1.25rem;border-bottom:0.5px solid var(--line);position:relative;flex-shrink:0}
 .header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--rose),var(--lilac),var(--rose),transparent)}
 .logo{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:var(--ink)}
 .logo span{color:var(--rose);font-style:italic}
 .logo-sub{font-size:11px;color:var(--ink-soft);font-weight:300;margin-top:2px;letter-spacing:.04em}
 .edition{display:inline-block;font-size:10px;font-weight:500;padding:3px 10px;border-radius:20px;background:var(--green-lt);color:#1a5c3f;border:0.5px solid #8fc9b0;margin-top:8px;letter-spacing:.04em}
-
-.tabs{display:flex;border-bottom:0.5px solid var(--line);background:#fff;flex-shrink:0;overflow-x:auto}
+.tabs{display:none;border-bottom:0.5px solid var(--line);background:#fff;flex-shrink:0;overflow-x:auto}
 .tab-btn{flex-shrink:0;padding:11px 14px;background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:var(--ink-soft);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
 .tab-btn.active{color:var(--ink);border-bottom-color:var(--rose)}
-
 .view{display:none;padding:1.25rem;max-width:540px;width:100%;margin:0 auto;flex:1}
 .view.active{display:block}
-
-/* NAME */
-.name-screen{text-align:center;padding:2.5rem 1rem}
-.welcome-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;color:var(--ink);margin-bottom:8px}
+.name-screen{text-align:center;padding:3rem 1rem}
+.welcome-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;color:var(--ink);margin-bottom:8px}
 .welcome-sub{font-size:13px;color:var(--ink-mid);line-height:1.65;margin-bottom:1.75rem}
 .name-screen input{width:100%;padding:13px 16px;border:0.5px solid var(--lilac);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);background:#fff;outline:none;margin-bottom:10px;transition:border-color .2s}
 .name-screen input:focus{border-color:var(--rose)}
@@ -39,21 +34,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .btn-primary{width:100%;padding:14px;background:var(--rose);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:#fff;cursor:pointer;transition:opacity .2s}
 .btn-primary:hover{opacity:.88}
 .btn-primary:disabled{opacity:.45;cursor:not-allowed}
-
-/* WEEK TABS */
+.progress-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.25rem}
+.po-card{background:#fff;border:0.5px solid var(--line);border-radius:10px;padding:12px;text-align:center}
+.po-val{font-size:22px;font-weight:500;color:var(--ink)}
+.po-label{font-size:10px;color:var(--ink-soft);margin-top:2px;line-height:1.3}
 .week-tabs{display:flex;gap:4px;margin-bottom:1rem;overflow-x:auto;padding-bottom:2px}
 .week-btn{flex-shrink:0;padding:7px 12px;border-radius:20px;border:0.5px solid var(--line);background:#fff;cursor:pointer;font-size:11px;font-weight:500;color:var(--ink-soft);font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap}
 .week-btn.active{background:var(--rose-lt);border-color:var(--lilac);color:var(--ink)}
-
-/* DAY GRID */
 .day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:1.25rem}
 .day-pill{padding:8px 3px;border-radius:10px;border:0.5px solid var(--line);background:#fff;cursor:pointer;text-align:center;transition:all .2s;font-size:9px;font-weight:500;color:var(--ink-soft)}
 .day-pill .dn{display:block;font-size:16px;font-weight:500;color:var(--ink);margin-bottom:2px}
 .day-pill.active{background:var(--rose-lt);border-color:var(--lilac)}
 .day-pill.complete{background:var(--green-lt);border-color:#8fc9b0}
 .day-pill.complete .dn{color:var(--green)}
-
-/* DAY CARD */
 .day-card{background:#fff;border:0.5px solid var(--line);border-radius:14px;padding:1rem 1.25rem;margin-bottom:1rem}
 .day-week-tag{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
 .day-title{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;color:var(--ink);margin-bottom:3px}
@@ -61,11 +54,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .day-task-box{background:var(--rose-lt);border:0.5px solid var(--lilac);border-radius:10px;padding:10px 12px}
 .day-task-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:#7a3328;margin-bottom:4px}
 .day-task-text{font-size:13px;color:var(--ink-mid);line-height:1.55}
-.day-pts-badge{display:inline-block;margin-top:8px;font-size:11px;font-weight:500;color:var(--rose);background:var(--rose-lt);padding:3px 10px;border-radius:20px;border:0.5px solid var(--lilac)}
-
 .sec-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin:1rem 0 7px}
-
-/* CHECKS */
 .check-list{display:flex;flex-direction:column;gap:6px}
 .check-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:#fff;border:0.5px solid var(--line);border-radius:10px;cursor:pointer;transition:all .2s;user-select:none}
 .check-item:hover{border-color:var(--lilac)}
@@ -76,28 +65,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .check-name{font-size:13px;font-weight:500;color:var(--ink)}
 .check-pts{font-size:11px;color:var(--ink-soft);margin-top:1px}
 .check-item.checked .check-name{color:var(--ink-mid)}
-
-/* SCORE */
 .score-bar{margin:1.25rem 0;background:#fff;border:0.5px solid var(--line);border-radius:12px;padding:14px 16px}
 .score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .score-label{font-size:12px;color:var(--ink-soft)}
 .score-val{font-size:20px;font-weight:500;color:var(--ink)}
 .prog-track{background:var(--rose-mid);border-radius:4px;height:6px;overflow:hidden}
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--rose),var(--lilac));border-radius:4px;transition:width .4s ease}
-
 .save-btn{width:100%;padding:13px;background:var(--ink);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:#fff;cursor:pointer;transition:opacity .2s;margin-top:4px}
 .save-btn:hover{opacity:.85}
 .save-btn:disabled{opacity:.45;cursor:not-allowed}
 .save-ok{text-align:center;font-size:12px;color:var(--green);margin-top:8px;display:none;font-weight:500}
 .save-err{text-align:center;font-size:12px;color:#c0647a;margin-top:8px;display:none}
-
-/* PROGRESS OVERVIEW */
-.progress-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.25rem}
-.po-card{background:#fff;border:0.5px solid var(--line);border-radius:10px;padding:12px;text-align:center}
-.po-val{font-size:22px;font-weight:500;color:var(--ink)}
-.po-label{font-size:10px;color:var(--ink-soft);margin-top:2px;line-height:1.3}
-
-/* RANKING */
 .prize-banner{background:linear-gradient(135deg,var(--rose-lt),#fff);border:0.5px solid var(--lilac);border-radius:12px;padding:12px 14px;margin-bottom:1.25rem}
 .prize-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-soft);margin-bottom:8px}
 .prize-item{font-size:13px;color:var(--ink-mid);padding:4px 0;display:flex;align-items:center;gap:10px}
@@ -109,7 +87,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .my-score-name{font-size:14px;font-weight:500;color:var(--ink-mid);margin-bottom:4px}
 .my-score-pts{font-size:42px;font-weight:500;color:var(--rose);line-height:1}
 .my-score-label{font-size:11px;color:var(--ink-soft);margin-top:4px}
-.refresh-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:6px 14px;border-radius:20px;border:0.5px solid var(--line);background:none;cursor:pointer;color:var(--ink-soft);font-family:'DM Sans',sans-serif;margin-bottom:1rem}
+.refresh-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:6px 14px;border-radius:20px;border:0.5px solid var(--line);background:none;cursor:pointer;color:var(--ink-soft);font-family:'DM Sans',sans-serif;margin-bottom:1rem;transition:all .2s}
+.refresh-btn:hover{border-color:var(--lilac);color:var(--ink)}
 .rank-list{display:flex;flex-direction:column;gap:7px}
 .rank-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fff;border:0.5px solid var(--line);border-radius:12px}
 .rank-pos{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0}
@@ -124,8 +103,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .rank-days{font-size:10px;color:var(--ink-soft);display:block;text-align:right;margin-top:2px}
 .loading{text-align:center;padding:2rem;font-size:13px;color:var(--ink-soft)}
 .empty{text-align:center;padding:2.5rem;font-size:13px;color:var(--ink-soft);font-style:italic}
-
-/* EVENTS */
 .events-header{margin-bottom:1.25rem}
 .events-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:var(--ink);margin-bottom:4px}
 .events-sub{font-size:13px;color:var(--ink-soft);line-height:1.5}
@@ -134,20 +111,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .s-rose{background:linear-gradient(90deg,var(--rose),var(--lilac))}
 .s-gold{background:linear-gradient(90deg,var(--gold),#e8b84b)}
 .s-green{background:linear-gradient(90deg,var(--green),#7ec8a0)}
-.event-body{padding:1rem 1.25rem}
-.event-date-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ev-photo{width:100%;height:160px;object-fit:cover;display:block}
 .event-date-pill{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;border:0.5px solid}
 .dp-rose{background:var(--rose-lt);color:#7a3328;border-color:#dbb5ad}
-.dp-gold{background:var(--gold-lt);color:#6b5010;border-color:#d4b87a}
-.dp-green{background:var(--green-lt);color:#1a5c3f;border-color:#8fc9b0}
 .event-time{font-size:11px;color:var(--ink-soft)}
 .event-name{font-size:15px;font-weight:500;color:var(--ink);margin-bottom:4px}
-.event-desc{font-size:12px;color:var(--ink-mid);line-height:1.55;margin-bottom:10px}
-.event-tags{display:flex;gap:5px;flex-wrap:wrap}
-.event-tag{font-size:10px;padding:2px 8px;border-radius:20px;background:var(--cream);border:0.5px solid var(--line);color:var(--ink-soft)}
 .event-location{font-size:11px;color:var(--ink-soft);margin-top:8px;display:flex;align-items:center;gap:4px}
-
-/* COMO FUNCIONA */
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:#25d366;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#fff;cursor:pointer;margin-top:10px;text-decoration:none}
+.wa-btn:hover{opacity:.9}
+.no-events{text-align:center;padding:2.5rem;font-size:13px;color:var(--ink-soft);font-style:italic}
 .info-card{background:#fff;border:0.5px solid var(--line);border-radius:12px;padding:1rem 1.25rem;margin-bottom:10px}
 .info-card-title{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:6px}
 .info-card-text{font-size:12px;color:var(--ink-mid);line-height:1.65}
@@ -163,6 +135,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .tb2{background:#f5f5f5;color:#777;border:1px solid #bbb}
 .tb3{background:#fdf0e8;color:#8b4513;border:1px solid #cd7f32}
 .tb-text{font-size:12px;color:var(--ink-mid);line-height:1.4;padding-top:2px}
+/* CONEXÃO */
+.photos-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.photo-card{background:#fff;border:0.5px solid var(--line);border-radius:12px;overflow:hidden}
+.photo-card img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.photo-card-body{padding:8px 10px}
+.photo-card-name{font-size:11px;font-weight:500;color:var(--ink);margin-bottom:2px}
+.photo-card-day{font-size:10px;color:var(--ink-soft)}
+.photo-card-desc{font-size:11px;color:var(--ink-mid);margin-top:4px;line-height:1.4}
+.photo-card-like{display:flex;align-items:center;gap:4px;margin-top:6px;padding-top:6px;border-top:0.5px solid var(--line)}
+.like-btn{background:none;border:none;cursor:pointer;font-size:16px;padding:0;line-height:1;transition:transform .15s}
+.like-btn:hover{transform:scale(1.2)}
+.like-count{font-size:11px;color:var(--ink-soft)}
 </style>
 </head>
 <body>
@@ -173,10 +157,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
   <span class="edition">✦ 3ª Edição · Começo tranquilo, resultado real</span>
 </div>
 
-<div class="tabs">
+<div class="tabs" id="mainTabs">
   <button class="tab-btn active" onclick="switchTab('checklist',this)">Meu Checklist</button>
   <button class="tab-btn" onclick="switchTab('ranking',this)">Ranking</button>
-  <button class="tab-btn" onclick="switchTab('eventos',this)">Eventos do mês</button>
+  <button class="tab-btn" onclick="switchTab('eventos',this)">Eventos</button>
   <button class="tab-btn" onclick="switchTab('conexao',this)">Conexão 💜</button>
   <button class="tab-btn" onclick="switchTab('como',this)">Como funciona</button>
 </div>
@@ -186,24 +170,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
   <div id="name-screen" class="name-screen">
     <div class="welcome-title">Olá, Poderosa!</div>
     <p class="welcome-sub">30 dias. Sem radicalismos, sem culpa. Pequenos hábitos que mudam tudo. Coloca seu nome e vamos começar juntas!</p>
-    <input type="text" id="nameInput" placeholder="Seu primeiro nome" maxlength="30">
+    <input type="text" id="nameInput" placeholder="Seu primeiro nome" maxlength="30" onkeydown="if(event.key==='Enter')setName()">
     <button class="btn-primary" onclick="setName()">Começar meus 30 dias →</button>
   </div>
-
   <div id="checklist-screen" style="display:none">
     <div class="progress-overview" id="progressOverview"></div>
-
     <div class="week-tabs" id="weekTabs"></div>
     <div class="day-grid" id="dayGrid"></div>
-
     <div id="dayCard"></div>
-
     <div class="sec-label">Hábitos do dia</div>
     <div class="check-list" id="checkHabits"></div>
-
     <div class="sec-label">Alimentação</div>
     <div class="check-list" id="checkFood"></div>
-
     <div class="score-bar">
       <div class="score-row">
         <span class="score-label">Pontos do dia</span>
@@ -211,9 +189,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
       </div>
       <div class="prog-track"><div class="prog-fill" id="dayProg" style="width:0%"></div></div>
     </div>
-
     <button class="save-btn" id="saveBtn" onclick="saveProgress()">Salvar meu progresso no ranking</button>
-    <div class="save-ok" id="saveOk">✓ Salvo! Você está no ranking. 💜</div>
+    <div class="save-ok" id="saveOk">✓ Progresso salvo! Você está no ranking. 💜</div>
     <div class="save-err" id="saveErr">Erro ao salvar. Verifique sua conexão.</div>
   </div>
 </div>
@@ -235,132 +212,80 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 <div class="view" id="v-eventos">
   <div class="events-header">
     <div class="events-title">Eventos do mês 💜</div>
-    <div class="events-sub">Encontros especiais preparados com amor para você. Reserve já na agenda!</div>
+    <div class="events-sub">Encontros especiais preparados com amor para você.</div>
   </div>
-  <div id="eventsList"><div class="loading">Carregando eventos…</div></div>
-
+  <div id="eventsList"><div class="no-events">Em breve novidades! 💜</div></div>
 </div>
-
-<style>
-
-.adm-input:focus{border-color:var(--rose)}
-.adm-input::placeholder{color:var(--ink-soft)}
-
-
-
-
-
-
-
-
-
-
-.wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:#25d366;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#fff;cursor:pointer;margin-top:10px;text-decoration:none}
-.wa-btn:hover{opacity:.9}
-.no-events{text-align:center;padding:2.5rem;font-size:13px;color:var(--ink-soft);font-style:italic}
-.photos-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
-.photo-card{background:#fff;border:0.5px solid var(--line);border-radius:12px;overflow:hidden}
-.photo-card img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
-.photo-card-body{padding:8px 10px}
-.photo-card-name{font-size:11px;font-weight:500;color:var(--ink);margin-bottom:2px}
-.photo-card-day{font-size:10px;color:var(--ink-soft)}
-.photo-card-desc{font-size:11px;color:var(--ink-mid);margin-top:4px;line-height:1.4}
-.photo-card-like{display:flex;align-items:center;gap:4px;margin-top:6px;padding-top:6px;border-top:0.5px solid var(--line)}
-.like-btn{background:none;border:none;cursor:pointer;font-size:14px;padding:0;line-height:1;transition:transform .15s}
-.like-btn:hover{transform:scale(1.2)}
-.like-btn.liked{filter:none}
-.like-count{font-size:11px;color:var(--ink-soft)}
-</style>
-
 
 <!-- CONEXÃO -->
 <div class="view" id="v-conexao">
   <div class="events-header">
     <div class="events-title">Painel de Conexão 💜</div>
-    <div class="events-sub">Veja o que as Poderosas estão compartilhando. Curta, inspire e se inspire!</div>
+    <div class="events-sub">Veja o que as Poderosas estão compartilhando. Curta e inspire!</div>
   </div>
-
-  <!-- COMPARTILHAR FOTO -->
-  <div class="info-card" id="sharePhotoCard" style="display:none">
-    <div class="info-card-title">📸 Compartilhe sua foto do dia</div>
-    <div class="info-card-text" style="margin-bottom:10px">Opcional — mas adoramos ver você em ação!</div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <input type="file" id="photoFile" accept="image/*" onchange="previewUploadPhoto(this)" style="display:none">
-      <button onclick="document.getElementById('photoFile').click()" style="padding:12px;border:1.5px dashed var(--lilac);border-radius:10px;background:var(--rose-lt);font-family:'DM Sans',sans-serif;font-size:13px;color:#7a3328;cursor:pointer;text-align:center">
-        📷 Toque aqui para escolher uma foto
-      </button>
-      <div id="uploadPreview" style="display:none">
-        <img id="uploadPreviewImg" style="width:100%;max-height:200px;object-fit:cover;border-radius:10px;border:0.5px solid var(--line)">
-      </div>
-      <textarea id="photoDesc" placeholder="Descreva seu momento (opcional)" rows="2" class="adm-input" style="resize:none"></textarea>
-      <div style="background:var(--green-lt);border:0.5px solid #8fc9b0;border-radius:10px;padding:10px 12px;font-size:12px;color:#1a5c3f;line-height:1.6">
-        🌿 <strong>Dica:</strong> Poste também no Instagram marcando <strong>@powerwelness</strong> e <strong>@grazzy.vaz</strong> com <strong>#PowerWellness30Dias</strong>
-      </div>
-      <button onclick="submitPhoto()" id="submitPhotoBtn" style="padding:12px;background:var(--rose);border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#fff;cursor:pointer">Compartilhar com a comunidade</button>
-      <div id="submitPhotoMsg" style="display:none;text-align:center;font-size:12px;margin-top:4px"></div>
+  <div id="shareSection" style="display:none;background:#fff;border:0.5px solid var(--line);border-radius:14px;padding:1.25rem;margin-bottom:1rem">
+    <div style="font-size:13px;font-weight:500;color:var(--ink);margin-bottom:10px">📸 Compartilhe sua foto do dia</div>
+    <div style="font-size:12px;color:var(--ink-soft);margin-bottom:10px">Opcional — mas adoramos ver você em ação!</div>
+    <input type="file" id="photoFile" accept="image/*" onchange="previewPhoto(this)" style="display:none">
+    <button onclick="document.getElementById('photoFile').click()" style="width:100%;padding:12px;border:1.5px dashed var(--lilac);border-radius:10px;background:var(--rose-lt);font-family:'DM Sans',sans-serif;font-size:13px;color:#7a3328;cursor:pointer;margin-bottom:8px">📷 Escolher foto da câmera ou galeria</button>
+    <div id="photoPreview" style="display:none;margin-bottom:8px">
+      <img id="photoPreviewImg" style="width:100%;max-height:200px;object-fit:cover;border-radius:10px">
     </div>
+    <textarea id="photoDesc" placeholder="Descreva seu momento (opcional)" rows="2" style="width:100%;padding:10px 12px;border:0.5px solid var(--lilac);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:#fff;outline:none;resize:none;margin-bottom:8px"></textarea>
+    <div style="background:var(--green-lt);border:0.5px solid #8fc9b0;border-radius:10px;padding:8px 12px;font-size:11px;color:#1a5c3f;line-height:1.6;margin-bottom:10px">
+      🌿 Poste também no Instagram marcando <strong>@powerwelness</strong> e <strong>@grazzy.vaz</strong> com <strong>#PowerWellness30Dias</strong>
+    </div>
+    <button onclick="submitPhoto()" id="submitPhotoBtn" style="width:100%;padding:12px;background:var(--rose);border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#fff;cursor:pointer">Compartilhar com a comunidade</button>
+    <div id="submitMsg" style="display:none;text-align:center;font-size:12px;margin-top:6px"></div>
   </div>
-
-  <div id="shareLoginNote" style="background:var(--rose-lt);border:0.5px solid var(--lilac);border-radius:12px;padding:1rem;margin-bottom:1rem;font-size:13px;color:var(--ink-mid);text-align:center">
-    Para compartilhar sua foto, <a href="#" onclick="switchTab('checklist',document.querySelector('.tab-btn'));return false" style="color:var(--rose);font-weight:500">comece o desafio primeiro</a> 💜
+  <div id="loginNoteConexao" style="background:var(--rose-lt);border:0.5px solid var(--lilac);border-radius:12px;padding:1rem;margin-bottom:1rem;font-size:13px;color:var(--ink-mid);text-align:center">
+    Para compartilhar fotos, comece o desafio primeiro 💜
   </div>
-
-  <button class="refresh-btn" onclick="loadPhotos()" style="margin-bottom:10px">↺ Atualizar fotos</button>
-  <div id="photosGrid" class="loading">Carregando fotos…</div>
+  <button class="refresh-btn" onclick="loadPhotos()">↺ Atualizar fotos</button>
+  <div id="photosGrid" class="loading">Carregando…</div>
 </div>
 
 <!-- COMO FUNCIONA -->
 <div class="view" id="v-como">
   <div class="info-card">
     <div class="info-card-title">🌿 A filosofia do desafio</div>
-    <div class="info-card-text">Esse desafio foi pensado para quem está começando. Sem radicalismos, sem eliminar grupos alimentares, sem sofrimento. Pequenos hábitos consistentes que se encaixam na vida real — e que, ao longo de 30 dias, fazem uma diferença enorme.</div>
+    <div class="info-card-text">Esse desafio foi pensado para quem está começando. Sem radicalismos, sem eliminar grupos alimentares, sem sofrimento. Pequenos hábitos consistentes que se encaixam na vida real.</div>
   </div>
-
   <div class="info-card" style="background:#fef9e7;border-color:#d4af37">
     <div class="info-card-title" style="color:#b8860b">🏆 Como funciona para ganhar</div>
     <div class="info-card-text">
       <strong style="display:block;margin-bottom:6px;color:var(--ink)">Para concorrer ao prêmio, é necessário completar os 30 dias.</strong>
-      Completar um dia significa marcar <strong>todos os 8 itens</strong> do checklist — hábitos e alimentação.<br><br>
-      <strong>Classificação final:</strong><br>
-      🥇 1° lugar — maior pontuação total<br>
-      Em caso de empate, desempata quem tiver mais dias completos → maior sequência → quem salvou primeiro.<br><br>
-      <strong>Importante:</strong> Salve seu progresso todo dia clicando em "Salvar meu progresso no ranking". Só conta o que foi salvo!<br><br>
-      <em style="color:var(--ink-soft)">Participar já é uma vitória — mas completar os 30 dias é transformação de verdade.</em>
+      Completar um dia = marcar <strong>todos os itens</strong> do checklist naquele dia.<br><br>
+      Em caso de empate: mais dias completos → maior sequência → quem salvou primeiro.<br><br>
+      <strong>Importante:</strong> Salve seu progresso todo dia! Só conta o que foi salvo no ranking.
     </div>
   </div>
-
   <div class="info-card">
     <div class="info-card-title">Pontuação por item</div>
     <table class="pts-table">
-      <tr><td>💧 Água (2 litros no dia)</td><td>+15 pts</td></tr>
+      <tr><td>💧 Água (2 litros)</td><td>+15 pts</td></tr>
       <tr><td>🚶 Movimento do dia</td><td>+20 pts</td></tr>
       <tr><td>📖 Devocional / reflexão</td><td>+10 pts</td></tr>
+      <tr><td>🙏 Gratidão do dia</td><td>+5 pts</td></tr>
       <tr><td>☕ Café da manhã</td><td>+10 pts</td></tr>
-      <tr><td>🥗 Almoço com salada ou legume</td><td>+10 pts</td></tr>
+      <tr><td>🥗 Almoço com salada</td><td>+10 pts</td></tr>
       <tr><td>🍽️ Jantar leve</td><td>+10 pts</td></tr>
       <tr><td>✨ Tarefa especial do dia</td><td>+20 pts</td></tr>
-      <tr><td>🙏 Gratidão do dia</td><td>+5 pts</td></tr>
     </table>
-    <div style="margin-top:10px;font-size:12px;color:var(--ink-soft)">Máximo por dia: <strong style="color:var(--rose)">100 pts</strong> · 30 dias completos: <strong style="color:var(--rose)">3.000 pts</strong></div>
+    <div style="margin-top:10px;font-size:12px;color:var(--ink-soft)">Máximo por dia: <strong style="color:var(--rose)">100 pts</strong> · 30 dias: <strong style="color:var(--rose)">3.000 pts</strong></div>
   </div>
-
-  <div class="info-card">
-    <div class="info-card-title">🏆 Desempate</div>
-    <div class="tiebreak-list">
-      <div class="tb-item"><div class="tb-num tb1">1</div><div class="tb-text"><strong>Mais dias completos</strong> — quem completou todos os itens em mais dias</div></div>
-      <div class="tb-item"><div class="tb-num tb2">2</div><div class="tb-text"><strong>Maior sequência</strong> — mais dias consecutivos sem falhar</div></div>
-      <div class="tb-item"><div class="tb-num tb3">3</div><div class="tb-text"><strong>Quem salvou primeiro</strong> — data do primeiro registro</div></div>
-    </div>
-  </div>
-
   <div class="tip-box">"Não é sobre perfeição. É sobre escolha. Todo dia é uma nova oportunidade." — Grazzy 💜</div>
 </div>
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbz6MwnFIJZ2ainEnnzb_QjwmVLaVocY97YPVKQY7qq1hINQIY16yjAGPBV0mpE-QIiBEw/exec'
 const MAX_DAY = 100
+const WA = '5531995482519'
+const STRIPE_COLORS = ['s-rose','s-gold','s-green','s-rose','s-gold','s-green']
+const WEEK_COLORS = ['','#c9796a','#9b6bb0','#3a9e72','#b8922a','#4a7ab8']
+const WEEKS = [1,2,3,4,5]
+const WEEK_LABELS = ['Semana 1','Semana 2','Semana 3','Semana 4','Celebração']
 
-// 30 DIAS estruturados em 4 semanas + 2 dias celebração
 const DAYS = [
   // SEMANA 1 — COMEÇAR (Dias 1-7)
   {w:1, wLabel:'Semana 1 · Começar', label:'Começar', quote:'Hoje eu dou o primeiro passo. Ele não precisa ser perfeito.', task:'Beba 2 litros de água e registre cada vez que você beber. Só isso. Simples e poderoso.', taskIcon:'💧'},
@@ -403,58 +328,59 @@ const DAYS = [
   {w:5, wLabel:'Celebração', label:'Celebrar', quote:'Eu cheguei. Eu escolhi a mim mesma — todo dia.', task:'Celebre! Faça algo especial para você hoje. Uma refeição que você ama, um passeio, um momento de gratidão com Deus. Você merece!', taskIcon:'🎉'},
 ]
 
-// Itens fixos diários
 const HABITS = [
-  {id:'agua',      label:'Água (2 litros no dia)',         pts:15},
-  {id:'movimento', label:'Movimento do dia',               pts:20},
+  {id:'agua',      label:'Água (2 litros no dia)',        pts:15},
+  {id:'movimento', label:'Movimento do dia',              pts:20},
   {id:'devocional',label:'Devocional / reflexão do dia',  pts:10},
-  {id:'gratidao',  label:'Gratidão do dia',               pts:5},
+  {id:'gratidao',  label:'Gratidão do dia',              pts:5},
 ]
 const FOOD = [
   {id:'cafe',   label:'Café da manhã',              pts:10},
-  {id:'almoco', label:'Almoço com salada ou legume',pts:10},
-  {id:'jantar', label:'Jantar leve',               pts:10},
-  {id:'tarefa', label:'Tarefa especial do dia',    pts:20},
+  {id:'almoco', label:'Almoço com salada ou legume', pts:10},
+  {id:'jantar', label:'Jantar leve',                pts:10},
+  {id:'tarefa', label:'Tarefa especial do dia',     pts:20},
 ]
-
-const WEEK_COLORS = ['','#c9796a','#9b6bb0','#3a9e72','#b8922a','#4a7ab8']
 
 let userName  = localStorage.getItem('pw3_name') || ''
 let checks    = JSON.parse(localStorage.getItem('pw3_checks') || '{}')
 let firstSave = localStorage.getItem('pw3_first_save') || ''
 let curDay    = 0
 let curWeek   = 1
+let photoB64  = ''
 
+// ---- TABS ----
 function switchTab(id, btn) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'))
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
   document.getElementById('v-' + id).classList.add('active')
   btn.classList.add('active')
   if (id === 'ranking') loadRanking()
+  if (id === 'conexao') loadPhotos()
+  if (id === 'eventos') renderEvents()
 }
 
+// ---- NAME ----
 function setName() {
   const v = document.getElementById('nameInput').value.trim()
   if (!v) return
   userName = v
   localStorage.setItem('pw3_name', userName)
-  showChecklist()
+  startChecklist()
 }
 
-function showChecklist() {
+function startChecklist() {
   document.getElementById('name-screen').style.display = 'none'
   document.getElementById('checklist-screen').style.display = 'block'
-  showShareCard()
+  document.getElementById('mainTabs').style.display = 'flex'
+  document.getElementById('shareSection').style.display = 'block'
+  document.getElementById('loginNoteConexao').style.display = 'none'
   buildWeekTabs()
   buildDayGrid(1)
   renderDay(0)
   updateOverview()
 }
 
-// Weeks
-const WEEKS = [1,2,3,4,5]
-const WEEK_LABELS = ['Semana 1','Semana 2','Semana 3','Semana 4','Celebração']
-
+// ---- WEEKS / DAYS ----
 function buildWeekTabs() {
   document.getElementById('weekTabs').innerHTML = WEEKS.map((w, i) =>
     `<button class="week-btn ${w===1?'active':''}" onclick="selectWeek(${w},this)">${WEEK_LABELS[i]}</button>`
@@ -466,7 +392,6 @@ function selectWeek(w, btn) {
   document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'))
   btn.classList.add('active')
   buildDayGrid(w)
-  // render first day of week
   const firstIdx = DAYS.findIndex(d => d.w === w)
   if (firstIdx >= 0) renderDay(firstIdx)
 }
@@ -474,8 +399,7 @@ function selectWeek(w, btn) {
 function buildDayGrid(w) {
   const filtered = DAYS.map((d, i) => ({...d, idx:i})).filter(d => d.w === w)
   document.getElementById('dayGrid').innerHTML = filtered.map(d => {
-    const pts  = dayTotal(d.idx)
-    const done = pts >= MAX_DAY
+    const done = dayTotal(d.idx) >= MAX_DAY
     return `<div class="day-pill ${d.idx===curDay?'active':''} ${done?'complete':''}" id="pill-${d.idx}" onclick="renderDay(${d.idx})">
       <span class="dn">${d.idx+1}</span>${done?'✓':'Dia'}
     </div>`
@@ -484,15 +408,13 @@ function buildDayGrid(w) {
 
 function renderDay(idx) {
   curDay = idx
-  document.querySelectorAll('.day-pill').forEach((p, i) => {
-    const pillIdx = parseInt(p.id.replace('pill-',''))
-    p.classList.toggle('active', pillIdx === idx)
+  document.querySelectorAll('.day-pill').forEach(p => {
+    p.classList.toggle('active', parseInt(p.id.replace('pill-','')) === idx)
   })
   const d = DAYS[idx]
-  const wColor = WEEK_COLORS[d.w]
   document.getElementById('dayCard').innerHTML = `
     <div class="day-card">
-      <div class="day-week-tag" style="color:${wColor}">${d.wLabel}</div>
+      <div class="day-week-tag" style="color:${WEEK_COLORS[d.w]}">${d.wLabel}</div>
       <div class="day-title">Dia ${idx+1} · ${d.label}</div>
       <div class="day-quote">${d.quote}</div>
       <div class="day-task-box">
@@ -505,12 +427,12 @@ function renderDay(idx) {
 }
 
 function renderItems() {
-  document.getElementById('checkHabits').innerHTML = HABITS.map(item => renderCheck(item)).join('')
-  document.getElementById('checkFood').innerHTML   = FOOD.map(item => renderCheck(item)).join('')
+  document.getElementById('checkHabits').innerHTML = HABITS.map(renderCheck).join('')
+  document.getElementById('checkFood').innerHTML   = FOOD.map(renderCheck).join('')
 }
 
 function renderCheck(item) {
-  const k  = `d${curDay}_${item.id}`
+  const k = `d${curDay}_${item.id}`
   const on = !!checks[k]
   return `<div class="check-item ${on?'checked':''}" onclick="toggle('${k}',this)">
     <div class="check-box">${on?'✓':''}</div>
@@ -531,16 +453,14 @@ function toggle(k, el) {
   buildDayGrid(curWeek)
 }
 
-function allItems() { return [...HABITS, ...FOOD] }
-
 function dayTotal(idx) {
-  return allItems().reduce((s, it) => s + (checks[`d${idx}_${it.id}`] ? it.pts : 0), 0)
+  return [...HABITS,...FOOD].reduce((s, it) => s + (checks[`d${idx}_${it.id}`] ? it.pts : 0), 0)
 }
-function totalPts()     { return DAYS.reduce((s, _, i) => s + dayTotal(i), 0) }
-function completeDays() { return DAYS.reduce((s, _, i) => s + (dayTotal(i) >= MAX_DAY ? 1 : 0), 0) }
-function bestStreak() {
-  let best=0, cur=0
-  DAYS.forEach((_, i) => { if(dayTotal(i)>=MAX_DAY){cur++;best=Math.max(best,cur)}else cur=0 })
+function totalPts()     { return DAYS.reduce((s,_,i) => s + dayTotal(i), 0) }
+function completeDays() { return DAYS.reduce((s,_,i) => s + (dayTotal(i) >= MAX_DAY ? 1 : 0), 0) }
+function bestStreak()   {
+  let best=0,cur=0
+  DAYS.forEach((_,i) => { if(dayTotal(i)>=MAX_DAY){cur++;best=Math.max(best,cur)}else cur=0 })
   return best
 }
 
@@ -551,124 +471,83 @@ function updateScore() {
 }
 
 function updateOverview() {
-  const total = totalPts()
-  const done  = completeDays()
-  const days  = DAYS.filter((_, i) => dayTotal(i) > 0).length
   document.getElementById('progressOverview').innerHTML = `
-    <div class="po-card"><div class="po-val">${total}</div><div class="po-label">Pontos totais</div></div>
-    <div class="po-card"><div class="po-val">${done}</div><div class="po-label">Dias completos</div></div>
-    <div class="po-card"><div class="po-val">${days}</div><div class="po-label">Dias iniciados</div></div>`
+    <div class="po-card"><div class="po-val">${totalPts()}</div><div class="po-label">Pontos totais</div></div>
+    <div class="po-card"><div class="po-val">${completeDays()}</div><div class="po-label">Dias completos</div></div>
+    <div class="po-card"><div class="po-val">${DAYS.filter((_,i)=>dayTotal(i)>0).length}</div><div class="po-label">Dias iniciados</div></div>`
 }
 
+// ---- SAVE ----
 async function saveProgress() {
   const btn = document.getElementById('saveBtn')
-  const ok  = document.getElementById('saveOk')
-  const err = document.getElementById('saveErr')
   btn.disabled = true; btn.textContent = 'Salvando…'
-  ok.style.display = 'none'; err.style.display = 'none'
-
-  if (!firstSave) { firstSave = new Date().toISOString(); localStorage.setItem('pw3_first_save', firstSave) }
-
+  document.getElementById('saveOk').style.display = 'none'
+  document.getElementById('saveErr').style.display = 'none'
+  if (!firstSave) { firstSave = new Date().toISOString(); localStorage.setItem('pw3_first_save',firstSave) }
   try {
     const url = `${API}?action=save3&name=${encodeURIComponent(userName)}&pts=${totalPts()}&completeDays=${completeDays()}&bestStreak=${bestStreak()}&firstSave=${encodeURIComponent(firstSave)}`
     await fetch(url, {mode:'no-cors'})
-    ok.style.display = 'block'
-    setTimeout(() => ok.style.display = 'none', 3000)
+    document.getElementById('saveOk').style.display = 'block'
+    setTimeout(()=>document.getElementById('saveOk').style.display='none',3000)
   } catch(e) {
-    err.style.display = 'block'
-    setTimeout(() => err.style.display = 'none', 4000)
+    document.getElementById('saveErr').style.display = 'block'
+    setTimeout(()=>document.getElementById('saveErr').style.display='none',4000)
   }
   btn.disabled = false; btn.textContent = 'Salvar meu progresso no ranking'
 }
 
+// ---- RANKING ----
 async function loadRanking() {
   const list  = document.getElementById('rankList')
   const myDiv = document.getElementById('myScoreDiv')
   list.innerHTML = '<div class="loading">Carregando…</div>'
   myDiv.innerHTML = ''
-
   try {
     const res  = await fetch(`${API}?action=get3`)
     const data = await res.json()
-    let entries = data.ranking || []
-
-    entries.sort((a,b) => {
-      if (b.pts !== a.pts) return b.pts - a.pts
-      if ((b.completeDays||0) !== (a.completeDays||0)) return (b.completeDays||0)-(a.completeDays||0)
-      if ((b.bestStreak||0) !== (a.bestStreak||0)) return (b.bestStreak||0)-(a.bestStreak||0)
-      return (a.firstSave||'').localeCompare(b.firstSave||'')
+    let entries = (data.ranking||[]).sort((a,b) => {
+      if(b.pts!==a.pts) return b.pts-a.pts
+      if((b.completeDays||0)!==(a.completeDays||0)) return (b.completeDays||0)-(a.completeDays||0)
+      if((b.bestStreak||0)!==(a.bestStreak||0)) return (b.bestStreak||0)-(a.bestStreak||0)
+      return (a.firstSave||''). localeCompare(b.firstSave||'')
     })
-
-    if (!entries.length) { list.innerHTML = '<div class="empty">Nenhuma participante ainda.<br>Seja a primeira! 💜</div>'; return }
-
-    const medals = ['🥇','🥈','🥉']
-    const pclass = ['rp1','rp2','rp3']
-
-    list.innerHTML = entries.map((e,i) => {
-      const isMe = e.name.toLowerCase() === userName.toLowerCase()
-      const pc   = i < 3 ? pclass[i] : 'rp-other'
+    if(!entries.length){list.innerHTML='<div class="empty">Nenhuma participante ainda.<br>Seja a primeira! 💜</div>';return}
+    const medals=['🥇','🥈','🥉'],pc=['rp1','rp2','rp3']
+    list.innerHTML = entries.map((e,i)=>{
+      const isMe = e.name.toLowerCase()===userName.toLowerCase()
       return `<div class="rank-item" style="${isMe?'border-color:var(--rose);background:var(--rose-lt)':''}">
-        <div class="rank-pos ${pc}">${medals[i]||i+1}</div>
+        <div class="rank-pos ${i<3?pc[i]:'rp-other'}">${medals[i]||i+1}</div>
         <div class="rank-info">
           <div class="rank-name">${e.name}${isMe?' (você)':''}</div>
           ${i<3?`<span class="rank-badge">${i===0?'1° · Brinde especial':i===1?'2° · Brinde surpresa':'3° · Brinde surpresa'}</span>`:''}
         </div>
-        <div>
-          <div class="rank-pts">${e.pts} pts</div>
-          <div class="rank-days">${e.completeDays||0}/30 dias</div>
-        </div>
+        <div><div class="rank-pts">${e.pts} pts</div><div class="rank-days">${e.completeDays||0}/30 dias</div></div>
       </div>`
     }).join('')
-
-    const myIdx = entries.findIndex(e => e.name.toLowerCase() === userName.toLowerCase())
-    if (myIdx >= 0) {
-      const me = entries[myIdx]
-      myDiv.innerHTML = `<div class="my-score-card">
-        <div class="my-score-name">${me.name}</div>
-        <div class="my-score-pts">${me.pts}</div>
-        <div class="my-score-label">pontos totais · ${myIdx+1}° lugar de ${entries.length}</div>
-      </div>`
-    }
-  } catch(e) {
-    list.innerHTML = '<div class="empty">Erro ao carregar. Tente novamente.</div>'
-  }
+    const myIdx = entries.findIndex(e=>e.name.toLowerCase()===userName.toLowerCase())
+    if(myIdx>=0){const me=entries[myIdx];myDiv.innerHTML=`<div class="my-score-card"><div class="my-score-name">${me.name}</div><div class="my-score-pts">${me.pts}</div><div class="my-score-label">pontos totais · ${myIdx+1}° lugar de ${entries.length}</div></div>`}
+  } catch(e){ list.innerHTML='<div class="empty">Erro ao carregar. Tente novamente.</div>' }
 }
 
-if (userName) showChecklist()
+// ---- EVENTOS ----
+function getEvents(){ try{return JSON.parse(localStorage.getItem('pw3_events')||'[]')}catch(e){return []} }
 
-// ============================================================
-// EVENTOS — Admin + Público
-// ============================================================
-const ADMIN_PASS = 'power2025'
-const WA_NUMBER  = '5531995482519'
-const STRIPE_COLORS = ['s-rose','s-gold','s-green','s-rose','s-gold','s-green']
-
-function getEvents() {
-  try { return JSON.parse(localStorage.getItem('pw3_events') || '[]') } catch(e) { return [] }
-}
-function setEvents(evs) {
-  localStorage.setItem('pw3_events', JSON.stringify(evs))
-}
-
-function renderPublicEvents() {
+function renderEvents() {
   const evs = getEvents()
   const el  = document.getElementById('eventsList')
-  if (!evs.length) {
-    el.innerHTML = '<div class="no-events">Nenhum evento cadastrado ainda.<br>Em breve novidades! 💜</div>'
-    return
-  }
-  el.innerHTML = evs.map((ev, i) => `
+  if(!evs.length){el.innerHTML='<div class="no-events">Em breve novidades! 💜</div>';return}
+  el.innerHTML = evs.map((ev,i)=>`
     <div class="event-card">
-      ${ev.photo ? `<img class="ev-photo" src="${ev.photo}" onerror="this.style.display='none'" alt="${ev.title}">` : `<div class="event-stripe ${STRIPE_COLORS[i%6]}"></div>`}
-      <div class="event-body" style="padding:1rem 1.25rem">
-        <div class="event-date-row" style="margin-bottom:8px">
-          ${ev.date ? `<span class="event-date-pill dp-rose">📅 ${ev.date}</span>` : ''}
-          ${ev.time ? `<span class="event-time">${ev.time}</span>` : ''}
+      ${ev.photo?`<img class="ev-photo" src="${ev.photo}" onerror="this.style.display='none'" alt="">`:`<div class="event-stripe ${STRIPE_COLORS[i%6]}"></div>`}
+      <div style="padding:1rem 1.25rem">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          ${ev.date?`<span class="event-date-pill dp-rose">📅 ${ev.date}</span>`:''}
+          ${ev.time?`<span class="event-time">${ev.time}</span>`:''}
         </div>
         <div class="event-name">${ev.title}</div>
-        <div class="event-desc" style="font-size:13px;color:var(--ink-mid);line-height:1.6;margin:6px 0 10px">${ev.desc}</div>
-        ${ev.local ? `<div class="event-location" style="font-size:12px;color:var(--ink-soft)">📍 ${ev.local}</div>` : ''}
-        <a href="https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Olá Grazzy! Tenho interesse em participar do evento: ' + ev.title)}" target="_blank" class="wa-btn">
+        <div style="font-size:13px;color:var(--ink-mid);line-height:1.6;margin:6px 0 10px">${ev.desc}</div>
+        ${ev.local?`<div class="event-location">📍 ${ev.local}</div>`:''}
+        <a href="https://wa.me/${WA}?text=${encodeURIComponent('Olá Grazzy! Tenho interesse no evento: '+ev.title)}" target="_blank" class="wa-btn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Quero participar
         </a>
@@ -676,158 +555,55 @@ function renderPublicEvents() {
     </div>`).join('')
 }
 
-() {
-  document.getElementById('adminModal').style.display = 'none'
-  clearForm()
-}
-
-() {
-  const url = document.getElementById('evPhoto').value.trim()
-  const div = document.getElementById('photoPreview')
-  const img = document.getElementById('photoPreviewImg')
-  if (url) { img.src = url; div.style.display = 'block' }
-  else div.style.display = 'none'
-}
-
-() {
-  const title = document.getElementById('evTitle').value.trim()
-  const desc  = document.getElementById('evDesc').value.trim()
-  if (!title || !desc) {
-    showEvMsg('Preencha pelo menos título e descrição.', '#c0647a')
-    return
-  }
-  const editId = document.getElementById('editId').value
-  const evs    = getEvents()
-  const ev = {
-    id:    editId || Date.now().toString(),
-    title, desc,
-    date:  document.getElementById('evDate').value.trim(),
-    time:  document.getElementById('evTime').value.trim(),
-    local: document.getElementById('evLocal').value.trim(),
-    photo: document.getElementById('evPhoto').value.trim(),
-  }
-  if (editId) {
-    const idx = evs.findIndex(e => e.id === editId)
-    if (idx >= 0) evs[idx] = ev
-  } else {
-    evs.push(ev)
-  }
-  setEvents(evs)
-  renderAdminEvents()
-  renderPublicEvents()
-  clearForm()
-  showEvMsg('✓ Evento salvo com sucesso!', 'var(--green)')
-}
-
-(id) {
-  if (!confirm('Excluir este evento?')) return
-  const evs = getEvents().filter(e => e.id !== id)
-  setEvents(evs)
-  renderAdminEvents()
-  renderPublicEvents()
-}
-
-(msg, color) {
-  const el = document.getElementById('saveEvMsg')
-  el.textContent = msg
-  el.style.color = color
-  el.style.display = 'block'
-  setTimeout(() => el.style.display = 'none', 3000)
-}
-
-
-
-// Carregar eventos ao abrir aba
-renderPublicEvents()
-
-// ============================================================
-// CONEXÃO — Painel de fotos
-// ============================================================
-let photoBase64 = ''
-
-function showShareCard() {
-  const sc = document.getElementById('sharePhotoCard')
-  const sl = document.getElementById('shareLoginNote')
-  if(sc){ sc.style.display = 'block' }
-  if(sl){ sl.style.display = 'none' }
-}
-
-function previewUploadPhoto(input) {
-  if (!input.files || !input.files[0]) return
-  const file = input.files[0]
+// ---- CONEXÃO / FOTOS ----
+function previewPhoto(input) {
+  if(!input.files||!input.files[0]) return
   const reader = new FileReader()
   reader.onload = e => {
-    photoBase64 = e.target.result
-    document.getElementById('uploadPreviewImg').src = photoBase64
-    document.getElementById('uploadPreview').style.display = 'block'
+    photoB64 = e.target.result
+    document.getElementById('photoPreviewImg').src = photoB64
+    document.getElementById('photoPreview').style.display = 'block'
   }
-  reader.readAsDataURL(file)
+  reader.readAsDataURL(input.files[0])
 }
 
-async function submitPhoto() {
-  if (!photoBase64) { alert('Escolha uma foto primeiro!'); return }
-  if (!userName)    { alert('Comece o desafio primeiro para compartilhar!'); return }
-  const btn  = document.getElementById('submitPhotoBtn')
-  const msg  = document.getElementById('submitPhotoMsg')
-  btn.disabled = true; btn.textContent = 'Enviando…'
-
-  const desc  = document.getElementById('photoDesc').value.trim()
-  const dayLabel = `Dia ${curDay + 1}`
-  const payload  = {
-    name: userName, day: dayLabel, desc: desc,
-    photo: photoBase64.substring(0, 50000), // limit size
-    ts: new Date().toISOString()
-  }
-
-  try {
-    const url = `${API}?action=save_photo&name=${encodeURIComponent(userName)}&day=${encodeURIComponent(dayLabel)}&desc=${encodeURIComponent(desc)}&ts=${encodeURIComponent(payload.ts)}`
-    // store photo in localStorage for display (base64)
-    const photos = JSON.parse(localStorage.getItem('pw3_photos') || '[]')
-    const existing = photos.findIndex(p => p.name === userName && p.day === dayLabel)
-    const photoObj = { id: Date.now().toString(), name: userName, day: dayLabel, desc, photo: photoBase64, ts: payload.ts, likes: 0, likedBy: [] }
-    if (existing >= 0) photos[existing] = {...photoObj, likes: photos[existing].likes||0, likedBy: photos[existing].likedBy||[]}
-    else photos.unshift(photoObj)
-    localStorage.setItem('pw3_photos', JSON.stringify(photos.slice(0, 100)))
-
-    msg.textContent = '✓ Foto compartilhada! Que inspiração! 💜'
-    msg.style.color = 'var(--green)'
-    msg.style.display = 'block'
-    photoBase64 = ''
-    document.getElementById('photoFile').value = ''
-    document.getElementById('uploadPreview').style.display = 'none'
-    document.getElementById('photoDesc').value = ''
-    loadPhotos()
-  } catch(e) {
-    msg.textContent = 'Erro ao enviar. Tente novamente.'
-    msg.style.color = '#c0647a'
-    msg.style.display = 'block'
-  }
-  btn.disabled = false; btn.textContent = 'Compartilhar com a comunidade'
-  setTimeout(() => msg.style.display = 'none', 4000)
+function submitPhoto() {
+  if(!photoB64){alert('Escolha uma foto primeiro!');return}
+  const desc = document.getElementById('photoDesc').value.trim()
+  const day  = `Dia ${curDay+1}`
+  const photos = JSON.parse(localStorage.getItem('pw3_photos')||'[]')
+  const photoObj = {id:Date.now().toString(),name:userName,day,desc,photo:photoB64,ts:new Date().toISOString(),likes:0}
+  photos.unshift(photoObj)
+  localStorage.setItem('pw3_photos', JSON.stringify(photos.slice(0,100)))
+  photoB64 = ''
+  document.getElementById('photoFile').value = ''
+  document.getElementById('photoPreview').style.display = 'none'
+  document.getElementById('photoDesc').value = ''
+  const msg = document.getElementById('submitMsg')
+  msg.textContent = '✓ Foto compartilhada! 💜'
+  msg.style.color = 'var(--green)'
+  msg.style.display = 'block'
+  setTimeout(()=>msg.style.display='none',3000)
+  loadPhotos()
 }
 
 function loadPhotos() {
   const el = document.getElementById('photosGrid')
-  const photos = JSON.parse(localStorage.getItem('pw3_photos') || '[]')
-  const myLikes = JSON.parse(localStorage.getItem('pw3_my_likes') || '[]')
-
-  if (!photos.length) {
-    el.innerHTML = '<div class="no-events">Nenhuma foto ainda.<br>Seja a primeira a compartilhar! 💜</div>'
-    return
-  }
-
+  const photos = JSON.parse(localStorage.getItem('pw3_photos')||'[]')
+  const myLikes = JSON.parse(localStorage.getItem('pw3_my_likes')||'[]')
+  if(!photos.length){el.innerHTML='<div class="empty">Nenhuma foto ainda.<br>Seja a primeira! 💜</div>';el.className='';return}
   el.className = 'photos-grid'
-  el.innerHTML = photos.map(p => {
-    const liked   = myLikes.includes(p.id)
-    const isMe    = p.name === userName
-    return `<div class="photo-card" id="pc-${p.id}">
-      <img src="${p.photo}" alt="Foto de ${p.name}" loading="lazy" onerror="this.parentElement.style.display='none'">
+  el.innerHTML = photos.map(p=>{
+    const liked = myLikes.includes(p.id)
+    const isMe  = p.name===userName
+    return `<div class="photo-card">
+      <img src="${p.photo}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'">
       <div class="photo-card-body">
         <div class="photo-card-name">${p.name}${isMe?' (você)':''}</div>
         <div class="photo-card-day">${p.day}</div>
-        ${p.desc ? `<div class="photo-card-desc">${p.desc}</div>` : ''}
+        ${p.desc?`<div class="photo-card-desc">${p.desc}</div>`:''}
         <div class="photo-card-like">
-          <button class="like-btn ${liked?'liked':''}" onclick="toggleLike('${p.id}',this)" title="${liked?'Descurtir':'Curtir'}">${liked?'❤️':'🤍'}</button>
+          <button class="like-btn" onclick="toggleLike('${p.id}',this)">${liked?'❤️':'🤍'}</button>
           <span class="like-count" id="lc-${p.id}">${p.likes||0} curtidas</span>
         </div>
       </div>
@@ -836,32 +612,21 @@ function loadPhotos() {
 }
 
 function toggleLike(id, btn) {
-  const photos  = JSON.parse(localStorage.getItem('pw3_photos') || '[]')
-  const myLikes = JSON.parse(localStorage.getItem('pw3_my_likes') || '[]')
-  const idx     = photos.findIndex(p => p.id === id)
-  if (idx < 0) return
-
-  const alreadyLiked = myLikes.includes(id)
-  if (alreadyLiked) {
-    photos[idx].likes = Math.max(0, (photos[idx].likes||1) - 1)
-    const liIdx = myLikes.indexOf(id)
-    myLikes.splice(liIdx, 1)
-    btn.textContent = '🤍'; btn.classList.remove('liked')
-  } else {
-    photos[idx].likes = (photos[idx].likes||0) + 1
-    myLikes.push(id)
-    btn.textContent = '❤️'; btn.classList.add('liked')
-  }
-  localStorage.setItem('pw3_photos', JSON.stringify(photos))
-  localStorage.setItem('pw3_my_likes', JSON.stringify(myLikes))
-  document.getElementById('lc-' + id).textContent = (photos[idx].likes||0) + ' curtidas'
+  const photos  = JSON.parse(localStorage.getItem('pw3_photos')||'[]')
+  const myLikes = JSON.parse(localStorage.getItem('pw3_my_likes')||'[]')
+  const idx = photos.findIndex(p=>p.id===id)
+  if(idx<0) return
+  const liked = myLikes.includes(id)
+  if(liked){photos[idx].likes=Math.max(0,(photos[idx].likes||1)-1);myLikes.splice(myLikes.indexOf(id),1);btn.textContent='🤍'}
+  else{photos[idx].likes=(photos[idx].likes||0)+1;myLikes.push(id);btn.textContent='❤️'}
+  localStorage.setItem('pw3_photos',JSON.stringify(photos))
+  localStorage.setItem('pw3_my_likes',JSON.stringify(myLikes))
+  document.getElementById('lc-'+id).textContent=(photos[idx].likes||0)+' curtidas'
 }
 
-// show share card if already logged in
-if (userName) showShareCard()
-
-// load photos when tab opens
-document.querySelector('[onclick*="conexao"]')?.addEventListener('click', () => setTimeout(loadPhotos, 100))
+// ---- INIT ----
+if (userName) startChecklist()
+else renderEvents()
 </script>
 </body>
 </html>
