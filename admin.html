@@ -170,12 +170,16 @@ textarea{resize:none}
         </div>
         <div>
           <div class="field-label">Foto do evento</div>
-          <input type="text" id="evPhoto" placeholder="Cole o link da imagem (URL)" oninput="previewEvPhoto()">
-          <div id="evPhotoPreviewBox" style="display:none;margin-top:8px;position:relative">
-            <img id="evPhotoPreview" style="width:100%;max-height:180px;object-fit:cover;border-radius:10px;border:0.5px solid var(--line);display:block">
-            <button type="button" onclick="clearPhoto()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.5);border:none;border-radius:50%;width:24px;height:24px;color:#fff;font-size:14px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center">✕</button>
+          <input type="file" id="evPhotoFile" accept="image/*" style="display:none" onchange="uploadAndCompress(this)">
+          <button type="button" onclick="document.getElementById('evPhotoFile').click()" style="width:100%;padding:11px;border:1.5px dashed var(--lilac);border-radius:10px;background:var(--rose-lt);font-family:'DM Sans',sans-serif;font-size:13px;color:#7a3328;cursor:pointer;text-align:center;margin-bottom:8px">
+            📁 Escolher foto do celular ou computador
+          </button>
+          <input type="text" id="evPhoto" placeholder="Ou cole um link de imagem (URL)" oninput="previewEvPhoto()" style="margin-bottom:8px">
+          <div id="evPhotoPreviewBox" style="display:none;margin-top:4px;position:relative">
+            <img id="evPhotoPreview" style="width:100%;max-height:200px;object-fit:cover;border-radius:10px;border:0.5px solid var(--line);display:block">
+            <button type="button" onclick="clearPhoto()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.55);border:none;border-radius:50%;width:26px;height:26px;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
           </div>
-          <div class="tip">💡 Suba a foto no Google Fotos → Compartilhar → Criar link. Ou use qualquer link público de imagem.</div>
+          <div id="photoStatus" style="font-size:11px;color:var(--ink-soft);margin-top:4px;display:none"></div>
         </div>
       </div>
       <div style="display:flex;gap:8px">
@@ -276,14 +280,56 @@ function previewEvPhoto() {
 
 function clearPhoto() {
   document.getElementById('evPhoto').value = ''
+  document.getElementById('evPhotoFile').value = ''
   document.getElementById('evPhotoPreviewBox').style.display = 'none'
+  document.getElementById('photoStatus').style.display = 'none'
+}
+
+function uploadAndCompress(input) {
+  if (!input.files || !input.files[0]) return
+  const statusEl = document.getElementById('photoStatus')
+  statusEl.textContent = 'Comprimindo imagem…'
+  statusEl.style.display = 'block'
+  statusEl.style.color = 'var(--ink-soft)'
+
+  const file   = input.files[0]
+  const reader = new FileReader()
+  reader.onload = e => {
+    const img = new Image()
+    img.onload = () => {
+      // Compress to max 800x600
+      const MAX_W = 800, MAX_H = 600
+      let w = img.width, h = img.height
+      if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W }
+      if (h > MAX_H) { w = Math.round(w * MAX_H / h); h = MAX_H }
+
+      const canvas = document.createElement('canvas')
+      canvas.width = w; canvas.height = h
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(img, 0, 0, w, h)
+
+      // JPEG at 60% quality
+      const compressed = canvas.toDataURL('image/jpeg', 0.6)
+      const sizeKB = Math.round(compressed.length * 0.75 / 1024)
+
+      document.getElementById('evPhoto').value = compressed
+      document.getElementById('evPhotoPreview').src = compressed
+      document.getElementById('evPhotoPreviewBox').style.display = 'block'
+      statusEl.textContent = `✓ Imagem pronta (${sizeKB}KB)`
+      statusEl.style.color = 'var(--green)'
+    }
+    img.src = e.target.result
+  }
+  reader.readAsDataURL(file)
 }
 
 function clearEvForm() {
   ['evTitle','evDate','evTime','evLocal','evDesc','evPhoto','editId'].forEach(id => {
     const el = document.getElementById(id); if(el) el.value = ''
   })
+  if(document.getElementById('evPhotoFile')) document.getElementById('evPhotoFile').value = ''
   document.getElementById('evPhotoPreviewBox').style.display = 'none'
+  const ps=document.getElementById('photoStatus'); if(ps) ps.style.display='none'
   document.getElementById('evFormTitle').textContent = '➕ Novo evento'
   document.getElementById('saveEvBtn').textContent   = 'Salvar evento'
   showMsg('evMsg','','')
@@ -309,15 +355,34 @@ async function saveEvent() {
   }
 
   try {
-    const url = `${API}?action=save_event&id=${encodeURIComponent(ev.id)}&title=${encodeURIComponent(ev.title)}&date=${encodeURIComponent(ev.date)}&time=${encodeURIComponent(ev.time)}&local=${encodeURIComponent(ev.local)}&desc=${encodeURIComponent(ev.desc)}&photo=${encodeURIComponent(ev.photo)}`
-    await fetch(url, {mode:'no-cors'})
+    const photo = ev.photo || ''
+    if (photo.startsWith('data:')) {
+      // base64 — POST no-cors (imagem comprimida)
+      await fetch(API, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify({tipo:'evento', ...ev})
+      })
+    } else {
+      // URL — GET simples
+      const qs = new URLSearchParams({
+        action:'save_event',
+        id: ev.id, title: ev.title, date: ev.date,
+        time: ev.time, local: ev.local, desc: ev.desc, photo: ev.photo
+      })
+      await fetch(`${API}?${qs}`, {mode:'no-cors'})
+    }
     
-    await loadEventsFromAPI()
-    renderEvList()
+    // Aguarda 1s para o script processar, depois recarrega
+    setTimeout(async () => {
+      await loadEventsFromAPI()
+      renderEvList()
+    }, 1500)
     clearEvForm()
-    showMsg('evMsg','✓ Evento salvo e publicado!','ok')
+    showMsg('evMsg','✓ Evento salvo! Aguarde atualização…','ok')
   } catch(err) {
-    showMsg('evMsg','Erro ao salvar. Tente novamente.','err')
+    showMsg('evMsg','Erro: ' + err.message,'err')
   }
   btn.disabled = false; btn.textContent = document.getElementById('editId').value ? 'Atualizar evento' : 'Salvar evento'
 }
