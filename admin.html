@@ -298,7 +298,8 @@ function uploadAndCompress(input) {
     const img = new Image()
     img.onload = () => {
       // Compress to max 800x600
-      const MAX_W = 800, MAX_H = 600
+      // Compress agressively to fit Sheets 45K char limit (~30KB image)
+      const MAX_W = 600, MAX_H = 400
       let w = img.width, h = img.height
       if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W }
       if (h > MAX_H) { w = Math.round(w * MAX_H / h); h = MAX_H }
@@ -308,8 +309,18 @@ function uploadAndCompress(input) {
       const ctx = canvas.getContext('2d')
       ctx.drawImage(img, 0, 0, w, h)
 
-      // JPEG at 60% quality
-      const compressed = canvas.toDataURL('image/jpeg', 0.6)
+      // Try quality 0.4, reduce if still too large
+      let compressed = canvas.toDataURL('image/jpeg', 0.4)
+      if (compressed.length > 42000) {
+        compressed = canvas.toDataURL('image/jpeg', 0.25)
+      }
+      if (compressed.length > 42000) {
+        // Last resort: halve dimensions
+        const c2 = document.createElement('canvas')
+        c2.width = Math.round(w/2); c2.height = Math.round(h/2)
+        c2.getContext('2d').drawImage(canvas, 0, 0, c2.width, c2.height)
+        compressed = c2.toDataURL('image/jpeg', 0.4)
+      }
       const sizeKB = Math.round(compressed.length * 0.75 / 1024)
 
       document.getElementById('evPhoto').value = compressed
@@ -486,29 +497,42 @@ async function loadRanking() {
 }
 
 // ---- FOTOS ----
-function loadAdminPhotos() {
+async function loadAdminPhotos() {
   const el = document.getElementById('adminPhotosGrid')
-  const photos = JSON.parse(localStorage.getItem(PHOTOS_KEY) || '[]')
-  if (!photos.length) { el.innerHTML = '<div class="empty">Nenhuma foto compartilhada ainda.</div>'; el.className=''; return }
-  el.className = 'photos-grid'
-  el.innerHTML = photos.map(p => `
-    <div class="photo-admin-card">
-      <img src="${p.photo}" alt="${p.name}" loading="lazy" onerror="this.parentElement.style.display='none'">
-      <div class="photo-admin-body">
-        <div class="photo-admin-name">${p.name}</div>
-        <div class="photo-admin-day">${p.day}</div>
-        <div class="photo-admin-likes">❤️ ${p.likes||0} curtidas</div>
-        ${p.desc ? `<div style="font-size:10px;color:var(--ink-soft);margin-top:3px">${p.desc}</div>` : ''}
-        <button class="del-photo-btn" onclick="deletePhoto('${p.id}')">Remover</button>
-      </div>
-    </div>`).join('')
+  el.innerHTML = '<div class="loading">Carregando…</div>'
+  el.className = ''
+  try {
+    const res  = await fetch(`${API}?action=get_photos`)
+    const data = await res.json()
+    const photos = data.photos || []
+    if (!photos.length) { el.innerHTML = '<div class="empty">Nenhuma foto ainda.</div>'; return }
+    el.className = 'photos-grid'
+    el.innerHTML = photos.map(p => `
+      <div class="photo-admin-card" id="apc-${p.id}">
+        ${p.photo ? `<img src="${p.photo}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'">` : `<div style="background:var(--rose-mid);aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:28px">💜</div>`}
+        <div class="photo-admin-body">
+          <div class="photo-admin-name">${p.name}</div>
+          <div class="photo-admin-day">${p.day}</div>
+          <div class="photo-admin-likes">❤️ ${p.likes||0} curtidas</div>
+          ${p.desc ? `<div style="font-size:10px;color:var(--ink-soft);margin-top:3px">${p.desc}</div>` : ''}
+          <button class="del-photo-btn" onclick="deleteAdminPhoto('${p.id}')">Remover</button>
+        </div>
+      </div>`).join('')
+  } catch(e) {
+    el.innerHTML = '<div class="empty">Erro ao carregar fotos.</div>'
+  }
 }
 
-function deletePhoto(id) {
-  if (!confirm('Remover esta foto?')) return
-  const photos = JSON.parse(localStorage.getItem(PHOTOS_KEY) || '[]').filter(p => p.id !== id)
-  localStorage.setItem(PHOTOS_KEY, JSON.stringify(photos))
-  loadAdminPhotos()
+async function deleteAdminPhoto(id) {
+  if (!confirm('Remover esta foto da comunidade?')) return
+  try {
+    await fetch(`${API}?action=delete_photo&id=${encodeURIComponent(id)}`, {mode:'no-cors'})
+    const card = document.getElementById('apc-'+id)
+    if (card) card.remove()
+    showMsg('evMsg','Foto removida.','ok')
+  } catch(e) {
+    showMsg('evMsg','Erro ao remover.','err')
+  }
 }
 
 // ---- UTILS ----
