@@ -725,44 +725,42 @@ async function submitPhoto() {
 }
 
 async function loadPhotos() {
-  const el = document.getElementById('photosGrid')
-  el.innerHTML = '<div class="loading">Carregando…</div>'
+  var el = document.getElementById('photosGrid')
+  el.innerHTML = '<div class="loading">Carregando...</div>'
   el.className = ''
-
   try {
-    const res  = await fetch(`${API}?action=get_photos`)
-    const data = await res.json()
-    if (data.photos) {
-      localStorage.setItem('pw3_photos', JSON.stringify(data.photos))
-    }
+    var res  = await fetch(API + '?action=get_photos')
+    var data = await res.json()
+    if (data.photos) localStorage.setItem('pw3_photos', JSON.stringify(data.photos))
   } catch(e) {}
-
-  const photos  = JSON.parse(localStorage.getItem('pw3_photos')||'[]')
-  const myLikes = JSON.parse(localStorage.getItem('pw3_my_likes')||'[]')
-
-  if(!photos.length) {
-    el.innerHTML = '<div class="empty">Nenhuma foto ainda.<br>Seja a primeira a compartilhar! 💜</div>'
+  var photos  = JSON.parse(localStorage.getItem('pw3_photos') || '[]')
+  var myLikes = JSON.parse(localStorage.getItem('pw3_my_likes') || '[]')
+  if (!photos.length) {
+    el.innerHTML = '<div class="empty">Nenhuma foto ainda. Seja a primeira!</div>'
     return
   }
-
   el.className = 'photos-grid'
-  el.innerHTML = photos.map(p => {
-    const liked = myLikes.includes(p.id)
-    const isMe  = p.name === userName
-    const hasPhoto = p.photo && p.photo.length > 10
-    return `<div class="photo-card" id="pc-${p.id}">
-      ${hasPhoto ? `<img src="${p.photo}" alt="" loading="lazy" onerror="this.style.display='none'">` : `<div style="background:var(--rose-mid);aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:32px">💜</div>`}
-      <div class="photo-card-body">
-        <div class="photo-card-name">${p.name}${isMe?' (você)':''}${ isMe ? \` <button onclick="deleteMyPhoto('${p.id}')" style="background:none;border:none;font-size:10px;color:#c0647a;cursor:pointer;margin-left:4px">✕</button>\` : ''}</div>
-        <div class="photo-card-day">${p.day}</div>
-        ${p.desc ? `<div class="photo-card-desc">${p.desc}</div>` : ''}
-        <div class="photo-card-like">
-          <button class="like-btn" onclick="toggleLike('${p.id}',this)">${liked?'❤️':'🤍'}</button>
-          <span class="like-count" id="lc-${p.id}">${p.likes||0} curtidas</span>
-        </div>
-      </div>
-    </div>`
-  }).join('')
+  var html = ''
+  for (var i = 0; i < photos.length; i++) {
+    var p     = photos[i]
+    var liked = myLikes.indexOf(p.id) >= 0
+    var isMe  = p.name === userName
+    var pid   = p.id.toString()
+    var imgTag = (p.photo && p.photo.length > 10)
+      ? '<img src="' + p.photo + '" alt="" loading="lazy" style="width:100%;aspect-ratio:1;object-fit:cover;display:block">'
+      : '<div style="background:var(--rose-mid);aspect-ratio:1;display:flex;align-items:center;justify-content:center">💜</div>'
+    html += '<div class="photo-card" id="pc-' + pid + '">'
+      + imgTag
+      + '<div class="photo-card-body">'
+      + '<div class="photo-card-name">' + p.name + (isMe ? ' (você)' : '') + '</div>'
+      + '<div class="photo-card-day">' + p.day + '</div>'
+      + (p.desc ? '<div class="photo-card-desc">' + p.desc + '</div>' : '')
+      + '<div class="photo-card-like">'
+      + '<button class="like-btn" onclick="toggleLike(&quot;' + pid + '&quot;,this)">' + (liked ? '❤️' : '🤍') + '</button>'
+      + '<span class="like-count" id="lc-' + pid + '">' + (p.likes || 0) + ' curtidas</span>'
+      + '</div></div></div>'
+  }
+  el.innerHTML = html
 }
 
 function toggleLike(id, btn) {
